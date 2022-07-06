@@ -14,7 +14,7 @@ export class Uniswap {
 
     private ohmToBorrow: string;
 
-    constructor(lpAddress: string, slippage: number = 0.05, ohmAmount: string, provider: JsonRpcProvider) {
+    constructor(lpAddress: string, slippage: number = 0.01, ohmAmount: string, provider: JsonRpcProvider) {
         this.liquidityPool = new Contract(lpAddress, this.abi, provider);
 
         this.acceptableSlippage = 1 - slippage;

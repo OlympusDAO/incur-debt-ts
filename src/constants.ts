@@ -8,3 +8,7 @@ export const Strategies = {
     "sushiswap": "0x0392e97abC5986cc3fdb083e6B90AA941ec4D1b3",
     "balancer": "0x0392e97abC5986cc3fdb083e6B90AA941ec4D1b3",
 }
+
+export const BalancerVault = "0xBA12222222228d8Ba445958a75a0704d566BF2C8";
+
+export const BalancerHelper = "0x5aDDCCa35b7A0D07C74063c48700C8590E87864E";
