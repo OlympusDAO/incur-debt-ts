@@ -23,7 +23,7 @@
   },
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": ["**/*.ts"],
       "rules": {
         "no-dupe-class-members": "off",
         "@typescript-eslint/camelcase": "off",
