@@ -3,6 +3,7 @@ import { IncurDebtABI } from "./abi/abis";
 import { IncurDebtAddress, ohm, Strategies } from "./constants";
 import { Context } from "./context";
 import { Balancer } from "./strategies/Balancer";
+import { Curve } from "./strategies/Curve";
 import { Uniswap } from "./strategies/Uniswap";
 
 type JsonRpcProvider = providers.JsonRpcProvider;
@@ -56,6 +57,14 @@ export class IncurDebt {
             );
 
             const encodedParams = BalancerStrategy.getEncodedParams();
+            const tx = await this.incurDebtContract.callStatic.createLP(ohmAmount, this.strategies[strategy], encodedParams);
+            return tx.data;
+        }
+
+        if (strategy == "curve") {
+            const CurveStrategy = new Curve(lpAddress, slippage, ohmAmount, this.provider);
+
+            const encodedParams = CurveStrategy.getEncodedParams();
             const tx = await this.incurDebtContract.callStatic.createLP(ohmAmount, this.strategies[strategy], encodedParams);
             return tx.data;
         }
