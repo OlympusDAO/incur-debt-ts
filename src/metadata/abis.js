@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CurvePoolABI = exports.BalancerHelperABI = exports.BalancerVaultsABI = exports.UniV2PoolABI = exports.BalancerVaultABI = exports.BalancerHelpersABI = exports.JoinPoolRequest = exports.UniswapV2ABI = exports.StableSwapABI = exports.IncurDebtABI = void 0;
+exports.CurvePoolABI = exports.BalancerHelperABI = exports.BalancerVaultsABI = exports.UniV2PoolABI = exports.ERC20ABI = exports.BalancerVaultABI = exports.BalancerHelpersABI = exports.JoinPoolRequest = exports.UniswapV2ABI = exports.StableSwapABI = exports.IncurDebtABI = void 0;
 exports.IncurDebtABI = [
     "function deposit(uint256)",
     "function borrow(uint256)",
@@ -31,6 +31,15 @@ exports.BalancerHelpersABI = [
 ];
 exports.BalancerVaultABI = [
     "function getPoolTokens(bytes32) view returns (IERC20[], uint256[], uint256)",
+];
+exports.ERC20ABI = [
+    "function approve(address, uint256) returns (bool)",
+    "function transferFrom(address, address, uint256) returns (bool)",
+    "function transfer(address, uint256) returns (bool)",
+    "function totalSupply() view returns (uint256)",
+    "function balanceOf(address) view returns (uint256)",
+    "function decimals() view returns(uint256)",
+    "function allowance(address, address) view returns (uint256)",
 ];
 exports.UniV2PoolABI = [
     {
