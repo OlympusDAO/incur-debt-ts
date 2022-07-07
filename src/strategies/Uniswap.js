@@ -67,11 +67,17 @@ class Uniswap {
             const isPrecisionEqual = ethers_1.BigNumber.from(tokenADecimals).eq(tokenBDecimals);
             const isTokenAMorePrecise = ethers_1.BigNumber.from(tokenADecimals).gt(tokenBDecimals);
             if (isPrecisionEqual)
-                return ethers_1.BigNumber.from(reservesA).mul("1000").div(reservesB).toString();
+                return ethers_1.BigNumber.from(reservesA)
+                    .mul("1000")
+                    .div(reservesB)
+                    .toString();
             if (isTokenAMorePrecise) {
                 const decimalAdjustment = ethers_1.BigNumber.from(tokenADecimals).div(tokenBDecimals);
                 const adjustedReservesB = decimalAdjustment.mul(reservesB);
-                return ethers_1.BigNumber.from(reservesA).mul("1000").div(adjustedReservesB).toString();
+                return ethers_1.BigNumber.from(reservesA)
+                    .mul("1000")
+                    .div(adjustedReservesB)
+                    .toString();
             }
             const decimalAdjustment = ethers_1.BigNumber.from(tokenBDecimals).div(tokenADecimals);
             const adjustedReservesA = decimalAdjustment.mul(reservesA);

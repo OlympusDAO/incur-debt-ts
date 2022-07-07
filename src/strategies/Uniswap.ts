@@ -24,8 +24,12 @@ export class Uniswap implements StrategyInterface {
         provider: JsonRpcProvider
     ) {
         this.provider = provider;
-        
-        this.liquidityPool = new Contract(lpAddress, Uniswap.abi, this.provider);
+
+        this.liquidityPool = new Contract(
+            lpAddress,
+            Uniswap.abi,
+            this.provider
+        );
 
         this.acceptableSlippage = (1 - slippage) * 1000;
 
@@ -43,7 +47,11 @@ export class Uniswap implements StrategyInterface {
             throw new Error("Liquidity pool not initialized");
 
         const tokenAAddress = await this.getTokenA();
-        const tokenAContract = new Contract(tokenAAddress, ERC20ABI, this.provider);
+        const tokenAContract = new Contract(
+            tokenAAddress,
+            ERC20ABI,
+            this.provider
+        );
         const tokenADecimals = await tokenAContract.decimals();
 
         return tokenADecimals;
@@ -60,7 +68,11 @@ export class Uniswap implements StrategyInterface {
             throw new Error("Liquidity pool not initialized");
 
         const tokenBAddress = await this.getTokenB();
-        const tokenBContract = new Contract(tokenBAddress, ERC20ABI, this.provider);
+        const tokenBContract = new Contract(
+            tokenBAddress,
+            ERC20ABI,
+            this.provider
+        );
         const tokenBDecimals = await tokenBContract.decimals();
 
         return tokenBDecimals;
@@ -78,19 +90,29 @@ export class Uniswap implements StrategyInterface {
         const reservesB = reservesInfo[1];
         const tokenBDecimals = await this.getTokenBDecimals();
 
-        const isPrecisionEqual = BigNumber.from(tokenADecimals).eq(tokenBDecimals);
-        const isTokenAMorePrecise = BigNumber.from(tokenADecimals).gt(tokenBDecimals);
+        const isPrecisionEqual =
+            BigNumber.from(tokenADecimals).eq(tokenBDecimals);
+        const isTokenAMorePrecise =
+            BigNumber.from(tokenADecimals).gt(tokenBDecimals);
 
         if (isPrecisionEqual)
-            return BigNumber.from(reservesA).mul("1000").div(reservesB).toString();
+            return BigNumber.from(reservesA)
+                .mul("1000")
+                .div(reservesB)
+                .toString();
 
         if (isTokenAMorePrecise) {
-            const decimalAdjustment = BigNumber.from(tokenADecimals).div(tokenBDecimals);
+            const decimalAdjustment =
+                BigNumber.from(tokenADecimals).div(tokenBDecimals);
             const adjustedReservesB = decimalAdjustment.mul(reservesB);
-            return BigNumber.from(reservesA).mul("1000").div(adjustedReservesB).toString();
+            return BigNumber.from(reservesA)
+                .mul("1000")
+                .div(adjustedReservesB)
+                .toString();
         }
 
-        const decimalAdjustment = BigNumber.from(tokenBDecimals).div(tokenADecimals);
+        const decimalAdjustment =
+            BigNumber.from(tokenBDecimals).div(tokenADecimals);
         const adjustedReservesA = decimalAdjustment.mul(reservesA);
         return adjustedReservesA.mul("1000").div(reservesB).toString();
     }

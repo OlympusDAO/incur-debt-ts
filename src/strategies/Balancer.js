@@ -59,13 +59,10 @@ class Balancer {
                 fromInternalBalance: false,
             };
             const expectedPoolTokensOut = yield this.balancerHelpers.callStatic.queryJoin(this.pool, addresses_1.IncurDebtAddress, this.msgSender, joinPoolRequest);
-            const minPoolTokensOut = ethers_1.BigNumber.from(expectedPoolTokensOut).mul(this.acceptableSlippage).div("1000");
-            const encodedParams = utils_1.defaultAbiCoder.encode(["bytes", "address[]", "uint256[]", "uint256"], [
-                this.pool,
-                this.assets,
-                this.assetAmounts,
-                minPoolTokensOut,
-            ]);
+            const minPoolTokensOut = ethers_1.BigNumber.from(expectedPoolTokensOut)
+                .mul(this.acceptableSlippage)
+                .div("1000");
+            const encodedParams = utils_1.defaultAbiCoder.encode(["bytes", "address[]", "uint256[]", "uint256"], [this.pool, this.assets, this.assetAmounts, minPoolTokensOut]);
             return encodedParams;
         });
     }
