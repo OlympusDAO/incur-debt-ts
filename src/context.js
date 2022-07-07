@@ -1,18 +1,23 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.Context = void 0;
-const ethers_1 = require("ethers");
-class Context {
-    constructor(provider_url) {
+var ethers_1 = require("ethers");
+var Context = /** @class */ (function () {
+    function Context(provider_url) {
         this._provider = new ethers_1.providers.JsonRpcProvider(provider_url);
     }
-    setProvider(provider) {
+    Context.prototype.setProvider = function (provider) {
         this._provider = provider;
-    }
-    get provider() {
-        if (this._provider)
-            return this._provider;
-        throw new Error("Provider must exist.");
-    }
-}
+    };
+    Object.defineProperty(Context.prototype, "provider", {
+        get: function () {
+            if (this._provider)
+                return this._provider;
+            throw new Error("Provider must exist.");
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return Context;
+}());
 exports.Context = Context;
