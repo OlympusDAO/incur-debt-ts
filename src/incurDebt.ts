@@ -1,6 +1,6 @@
 import { Contract, providers } from "ethers";
-import { IncurDebtABI } from "./abi/abis";
-import { IncurDebtAddress, ohm, Strategies } from "./constants";
+import { IncurDebtABI } from "./metadata/abis";
+import { IncurDebtAddress, StrategyAddresses } from "./metadata/addresses";
 import { Context } from "./context";
 import { Balancer } from "./strategies/Balancer";
 import { Curve } from "./strategies/Curve";
@@ -9,22 +9,22 @@ import { Uniswap } from "./strategies/Uniswap";
 type JsonRpcProvider = providers.JsonRpcProvider;
 
 export class IncurDebt {
-    private abi = IncurDebtABI;
+    static abi = IncurDebtABI;
 
-    static msgSender: string;
+    private _strategies: { [key: string]: string };
 
-    private strategies: { [key: string]: string } = Strategies;
+    private _context: Context;
 
-    private context = new Context("https://mainnet.infura.io/v3/9a9cc37c69df4dcab372cc09acc4598c");
+    public contract: Contract;
 
-    private provider: JsonRpcProvider;
-    
-    protected incurDebtContract: Contract;
-
-    constructor() {
-        this.provider = this.context.getProvider();
-
-        this.incurDebtContract = new Contract(IncurDebtAddress, this.abi, this.provider);
+    constructor(context: Context) {
+        this._context = context;
+        this._strategies = StrategyAddresses;
+        this.contract = new Contract(
+            IncurDebtAddress,
+            IncurDebt.abi,
+            context.provider
+        );
     }
 
     async encodeBorrowParameters(
@@ -36,12 +36,27 @@ export class IncurDebt {
         otherTokens: string[] = [],
         otherTokenAmounts: string[] = []
     ) {
-        if (!this.strategies[strategy]) throw new Error("The only available strategies are Curve, Uniswap, Sushiswap, or Balancer.");
+        const provider: JsonRpcProvider = this._context.provider;
+        const strategies: { [key: string]: string } = this._strategies;
+
+        if (!strategies[strategy])
+            throw new Error(
+                "The only available strategies are Curve, Uniswap, Sushiswap, or Balancer."
+            );
 
         if (strategy == "uniswap" || strategy == "sushiswap") {
-            const UniStrategy = new Uniswap(lpAddress, slippage, ohmAmount, this.provider);
-            const encodedParams =  UniStrategy.getEncodedParams();
-            const tx = await this.incurDebtContract.callStatic.createLP(ohmAmount, this.strategies[strategy], encodedParams);
+            const UniStrategy = new Uniswap(
+                lpAddress,
+                slippage,
+                ohmAmount,
+                provider
+            );
+            const encodedParams = UniStrategy.getEncodedParams();
+            const tx = await this.contract.callStatic.createLP(
+                ohmAmount,
+                strategies[strategy],
+                encodedParams
+            );
             return tx.data;
         }
 
@@ -53,19 +68,34 @@ export class IncurDebt {
                 otherTokenAmounts,
                 slippage,
                 ohmAmount,
-                this.provider
+                provider
             );
 
             const encodedParams = BalancerStrategy.getEncodedParams();
-            const tx = await this.incurDebtContract.callStatic.createLP(ohmAmount, this.strategies[strategy], encodedParams);
+            const tx = await this.contract.callStatic.createLP(
+                ohmAmount,
+                strategies[strategy],
+                encodedParams
+            );
             return tx.data;
         }
 
         if (strategy == "curve") {
-            const CurveStrategy = new Curve(lpAddress, slippage, ohmAmount, this.provider);
+            const CurveStrategy = new Curve(
+                lpAddress,
+                slippage,
+                ohmAmount,
+                provider
+            );
 
             const encodedParams = CurveStrategy.getEncodedParams();
-            const tx = await this.incurDebtContract.callStatic.createLP(ohmAmount, this.strategies[strategy], encodedParams);
+
+            const tx = await this.contract.callStatic.createLP(
+                ohmAmount,
+                strategies[strategy],
+                encodedParams
+            );
+
             return tx.data;
         }
     }
