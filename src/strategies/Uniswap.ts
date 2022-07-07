@@ -1,3 +1,4 @@
+import { StrategyInterface } from "../interfaces/strategy";
 import { BigNumber, Contract, providers } from "ethers";
 import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
 import { UniswapV2ABI } from "../metadata/abis";
@@ -5,7 +6,7 @@ import { OhmAddress } from "../metadata/addresses";
 
 type JsonRpcProvider = providers.JsonRpcProvider;
 
-export class Uniswap {
+export class Uniswap implements StrategyInterface {
     static abi = UniswapV2ABI;
 
     private liquidityPool: Contract;
@@ -52,7 +53,7 @@ export class Uniswap {
         return reserveRatio.toString();
     }
 
-    async getEncodedParams() {
+    async getEncodedParams(): Promise<string> {
         const tokenA = await this.getTokenA();
         let tokenAAmount: string;
         let minTokenAOut: string;
