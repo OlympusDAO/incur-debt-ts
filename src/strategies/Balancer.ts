@@ -1,12 +1,16 @@
 import { Contract, providers } from "ethers";
-import { defaultAbiCoder as  abiCoder } from "ethers/lib/utils";
-import { BalancerHelpersABI, BalancerVaultABI } from "../abi/abis";
-import { BalancerHelper, BalancerVault, IncurDebtAddress } from "../constants";
+import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
+import { BalancerHelpersABI, BalancerVaultABI } from "../metadata/abis";
+import {
+    BalancerHelperAddress,
+    BalancerVaultAddress,
+    IncurDebtAddress,
+} from "../metadata/addresses";
 
 type JsonRpcProvider = providers.JsonRpcProvider;
 
 export class Balancer {
-    private abi = BalancerVaultABI;
+    static abi = BalancerVaultABI;
 
     private msgSender: string;
 
@@ -35,9 +39,13 @@ export class Balancer {
     ) {
         this.msgSender = sender;
 
-        this.vault = new Contract(BalancerVault, this.abi, provider);
+        this.vault = new Contract(BalancerVaultAddress, Balancer.abi, provider);
 
-        this.balancerHelpers = new Contract(BalancerHelper, BalancerHelpersABI, provider);
+        this.balancerHelpers = new Contract(
+            BalancerHelperAddress,
+            BalancerHelpersABI,
+            provider
+        );
 
         this.pool = poolId;
 
@@ -51,14 +59,17 @@ export class Balancer {
     }
 
     async getPoolTokens(): Promise<string[]> {
-        if (!this.vault || !this.pool) throw new Error("Vault and liquidity pool not initialized");
+        if (!this.vault || !this.pool)
+            throw new Error("Vault and liquidity pool not initialized");
 
-        const {tokens, balances, lastTimestamp} = await this.vault.getPoolTokens(this.pool);
+        const { tokens, balances, lastTimestamp } =
+            await this.vault.getPoolTokens(this.pool);
         return tokens;
     }
 
     async verifyOtherTokens(): Promise<boolean> {
-        if (!this.vault || !this.pool) throw new Error("Vault and liquidity pool not initialized");
+        if (!this.vault || !this.pool)
+            throw new Error("Vault and liquidity pool not initialized");
 
         const poolTokens = await this.getPoolTokens();
 
@@ -70,30 +81,37 @@ export class Balancer {
     }
 
     async getEncodedParams() {
-        if (!this.verifyOtherTokens()) throw new Error("Passed tokens do not match the pool.")
+        if (!this.verifyOtherTokens())
+            throw new Error("Passed tokens do not match the pool.");
 
         const userData = abiCoder.encode(
-            [ "enum", "uint256", "uint256" ],
-            [ 1, this.otherTokenAmounts, 0]
+            ["enum", "uint256", "uint256"],
+            [1, this.otherTokenAmounts, 0]
         );
 
         const joinPoolRequest = {
             assets: this.otherTokens,
             maxAmountsIn: this.otherTokenAmounts,
             userData: userData,
-            toInternalBalance: false,
-        }
+            fromInternalBalance: false,
+        };
 
-        const minPoolTokensOut = await this.balancerHelpers.callStatic.queryJoin(
-            this.pool,
-            IncurDebtAddress,
-            this.msgSender,
-            joinPoolRequest
-        );
+        const minPoolTokensOut =
+            await this.balancerHelpers.callStatic.queryJoin(
+                this.pool,
+                IncurDebtAddress,
+                this.msgSender,
+                joinPoolRequest
+            );
 
         const encodedParams = abiCoder.encode(
-            [ "bytes", "address[]", "uint256[]", "uint256" ],
-            [ this.pool, this.otherTokens, this.otherTokenAmounts, minPoolTokensOut ]
+            ["bytes", "address[]", "uint256[]", "uint256"],
+            [
+                this.pool,
+                this.otherTokens,
+                this.otherTokenAmounts,
+                minPoolTokensOut,
+            ]
         );
 
         return encodedParams;

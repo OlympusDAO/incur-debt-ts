@@ -9,7 +9,7 @@ class Context {
     setProvider(provider) {
         this._provider = provider;
     }
-    getProvider() {
+    get provider() {
         if (this._provider)
             return this._provider;
         throw new Error("Provider must exist.");
