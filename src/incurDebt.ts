@@ -1,4 +1,5 @@
-import { Contract, providers } from "ethers";
+import { StrategyInterface } from "./interfaces/strategy";
+import { Contract, providers, UnsignedTransaction } from "ethers";
 import { IncurDebtABI } from "./metadata/abis";
 import { IncurDebtAddress, StrategyAddresses } from "./metadata/addresses";
 import { Context } from "./context";
@@ -35,33 +36,30 @@ export class IncurDebt {
         ohmAmount: string,
         otherTokens: string[] = [],
         otherTokenAmounts: string[] = []
-    ) {
+    ): Promise<UnsignedTransaction> {
         const provider: JsonRpcProvider = this._context.provider;
         const strategies: { [key: string]: string } = this._strategies;
+
+        let tx: any;
+
+        strategy = strategy.toLowerCase();
 
         if (!strategies[strategy])
             throw new Error(
                 "The only available strategies are Curve, Uniswap, Sushiswap, or Balancer."
             );
 
-        if (strategy == "uniswap" || strategy == "sushiswap") {
-            const UniStrategy = new Uniswap(
+        let strategyInstance: StrategyInterface;
+
+        if (strategy == "uniswap" || strategy == "sushiswap")
+            strategyInstance = new Uniswap(
                 lpAddress,
                 slippage,
                 ohmAmount,
                 provider
             );
-            const encodedParams = UniStrategy.getEncodedParams();
-            const tx = await this.contract.populateTransaction.createLP(
-                ohmAmount,
-                strategies[strategy],
-                encodedParams
-            );
-            return tx.data;
-        }
-
-        if (strategy == "balancer") {
-            const BalancerStrategy = new Balancer(
+        else if (strategy == "balancer")
+            strategyInstance = new Balancer(
                 sender,
                 lpAddress,
                 otherTokens,
@@ -70,33 +68,22 @@ export class IncurDebt {
                 ohmAmount,
                 provider
             );
-
-            const encodedParams = BalancerStrategy.getEncodedParams();
-            const tx = await this.contract.populateTransaction.createLP(
-                ohmAmount,
-                strategies[strategy],
-                encodedParams
-            );
-            return tx.data;
-        }
-
-        if (strategy == "curve") {
-            const CurveStrategy = new Curve(
+        else
+            strategyInstance = new Curve(
                 lpAddress,
                 slippage,
                 ohmAmount,
                 provider
             );
 
-            const encodedParams = CurveStrategy.getEncodedParams();
+        const encodedParams = strategyInstance.getEncodedParams();
 
-            const tx = await this.contract.callStatic.createLP(
-                ohmAmount,
-                strategies[strategy],
-                encodedParams
-            );
+        tx = await this.contract.populateTransaction.createLP(
+            ohmAmount,
+            strategies[strategy],
+            encodedParams
+        );
 
-            return tx.data;
-        }
+        return tx;
     }
 }

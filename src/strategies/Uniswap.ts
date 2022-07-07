@@ -1,11 +1,12 @@
-import { BigNumber, Contract, ethers, providers } from "ethers";
+import { StrategyInterface } from "../interfaces/strategy";
+import { BigNumber, Contract, providers } from "ethers";
 import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
-import { UniswapV2ABI } from "../metadata/abis";
+import { ERC20ABI, UniswapV2ABI } from "../metadata/abis";
 import { OhmAddress } from "../metadata/addresses";
 
 type JsonRpcProvider = providers.JsonRpcProvider;
 
-export class Uniswap {
+export class Uniswap implements StrategyInterface {
     static abi = UniswapV2ABI;
 
     private liquidityPool: Contract;
@@ -14,13 +15,17 @@ export class Uniswap {
 
     private ohmToBorrow: string;
 
+    private provider: JsonRpcProvider;
+
     constructor(
         lpAddress: string,
         slippage: number = 0.01,
         ohmAmount: string,
         provider: JsonRpcProvider
     ) {
-        this.liquidityPool = new Contract(lpAddress, Uniswap.abi, provider);
+        this.provider = provider;
+        
+        this.liquidityPool = new Contract(lpAddress, Uniswap.abi, this.provider);
 
         this.acceptableSlippage = (1 - slippage) * 100;
 
@@ -33,10 +38,32 @@ export class Uniswap {
         return this.liquidityPool.token0();
     }
 
+    async getTokenADecimals(): Promise<string> {
+        if (!this.liquidityPool)
+            throw new Error("Liquidity pool not initialized");
+
+        const tokenAAddress = await this.getTokenA();
+        const tokenAContract = new Contract(tokenAAddress, ERC20ABI, this.provider);
+        const tokenADecimals = await tokenAContract.decimals();
+
+        return tokenADecimals;
+    }
+
     async getTokenB(): Promise<string> {
         if (!this.liquidityPool)
             throw new Error("Liquidity pool not initialized");
         return this.liquidityPool.token1();
+    }
+
+    async getTokenBDecimals(): Promise<string> {
+        if (!this.liquidityPool)
+            throw new Error("Liquidity pool not initialized");
+
+        const tokenBAddress = await this.getTokenB();
+        const tokenBContract = new Contract(tokenBAddress, ERC20ABI, this.provider);
+        const tokenBDecimals = await tokenBContract.decimals();
+
+        return tokenBDecimals;
     }
 
     async getReserveRatio(): Promise<string> {
@@ -45,15 +72,30 @@ export class Uniswap {
 
         const reservesInfo = await this.liquidityPool.getReserves();
 
-        const reserveRatio = (
-            BigNumber.from(reservesInfo[0]).div(BigNumber.from(reservesInfo[1])
-        ).mul("100")
-        );
+        const reservesA = reservesInfo[0];
+        const tokenADecimals = await this.getTokenADecimals();
 
-        return reserveRatio.toString();
+        const reservesB = reservesInfo[1];
+        const tokenBDecimals = await this.getTokenBDecimals();
+
+        const isPrecisionEqual = BigNumber.from(tokenADecimals).eq(tokenBDecimals);
+        const isTokenAMorePrecise = BigNumber.from(tokenADecimals).gt(tokenBDecimals);
+
+        if (isPrecisionEqual)
+            return BigNumber.from(reservesA).div(reservesB).mul("100").toString();
+
+        if (isTokenAMorePrecise) {
+            const decimalAdjustment = BigNumber.from(tokenADecimals).div(tokenBDecimals);
+            const adjustedReservesB = decimalAdjustment.mul(reservesB);
+            return BigNumber.from(reservesA).div(adjustedReservesB).mul("100").toString();
+        }
+
+        const decimalAdjustment = BigNumber.from(tokenBDecimals).div(tokenADecimals);
+        const adjustedReservesA = decimalAdjustment.mul(reservesA);
+        return adjustedReservesA.div(reservesB).mul("100").toString();
     }
 
-    async getEncodedParams() {
+    async getEncodedParams(): Promise<string> {
         const tokenA = await this.getTokenA();
         let tokenAAmount: string;
         let minTokenAOut: string;

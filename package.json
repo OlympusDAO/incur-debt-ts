@@ -10,7 +10,8 @@
     "lint": "eslint \"**/*.ts\"",
     "lint:fix": "eslint --fix \"**/*.ts\"",
     "format": "prettier --check \"**/*.ts\"",
-    "format:fix": "prettier --write \"**/*.ts\""
+    "format:fix": "prettier --write \"**/*.ts\"",
+    "prepare": "husky install"
   },
   "dependencies": {
     "dotenv": "^16.0.1",
@@ -25,6 +26,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "husky": "^8.0.0"
   }
 }
