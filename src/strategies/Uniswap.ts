@@ -27,7 +27,7 @@ export class Uniswap implements StrategyInterface {
         
         this.liquidityPool = new Contract(lpAddress, Uniswap.abi, this.provider);
 
-        this.acceptableSlippage = (1 - slippage) * 100;
+        this.acceptableSlippage = (1 - slippage) * 1000;
 
         this.ohmToBorrow = ohmAmount;
     }
@@ -74,25 +74,27 @@ export class Uniswap implements StrategyInterface {
 
         const reservesA = reservesInfo[0];
         const tokenADecimals = await this.getTokenADecimals();
+        console.log(tokenADecimals);
 
         const reservesB = reservesInfo[1];
         const tokenBDecimals = await this.getTokenBDecimals();
+        console.log(tokenBDecimals);
 
         const isPrecisionEqual = BigNumber.from(tokenADecimals).eq(tokenBDecimals);
         const isTokenAMorePrecise = BigNumber.from(tokenADecimals).gt(tokenBDecimals);
 
         if (isPrecisionEqual)
-            return BigNumber.from(reservesA).div(reservesB).mul("100").toString();
+            return BigNumber.from(reservesA).mul("1000").div(reservesB).toString();
 
         if (isTokenAMorePrecise) {
             const decimalAdjustment = BigNumber.from(tokenADecimals).div(tokenBDecimals);
             const adjustedReservesB = decimalAdjustment.mul(reservesB);
-            return BigNumber.from(reservesA).div(adjustedReservesB).mul("100").toString();
+            return BigNumber.from(reservesA).mul("1000").div(adjustedReservesB).toString();
         }
 
         const decimalAdjustment = BigNumber.from(tokenBDecimals).div(tokenADecimals);
         const adjustedReservesA = decimalAdjustment.mul(reservesA);
-        return adjustedReservesA.div(reservesB).mul("100").toString();
+        return adjustedReservesA.mul("1000").div(reservesB).toString();
     }
 
     async getEncodedParams(): Promise<string> {
@@ -105,38 +107,44 @@ export class Uniswap implements StrategyInterface {
         let minTokenBOut: string;
 
         const reserveRatio = await this.getReserveRatio();
+        console.log(reserveRatio);
 
         if (tokenA == OhmAddress) {
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
-                .div("100")
+                .div("1000")
                 .toString();
 
             tokenBAmount = BigNumber.from(tokenAAmount)
-                .mul("100")
+                .mul("1000")
                 .div(reserveRatio)
                 .toString();
             minTokenBOut = BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
-                .div("100")
+                .div("1000")
                 .toString();
         } else {
             tokenBAmount = this.ohmToBorrow;
             minTokenBOut = BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
-                .div("100")
+                .div("1000")
                 .toString();
 
             tokenAAmount = BigNumber.from(tokenBAmount)
                 .mul(reserveRatio)
-                .div("100")
+                .div("1000")
                 .toString();
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
-                .div("100")
+                .div("1000")
                 .toString();
         }
+
+        console.log(tokenAAmount);
+        console.log(minTokenAOut);
+        console.log(tokenBAmount);
+        console.log(minTokenBOut);
 
         const encodedParams = abiCoder.encode(
             ["address", "address", "uint256", "uint256", "uint256", "uint256"],

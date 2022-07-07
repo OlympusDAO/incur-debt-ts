@@ -27,7 +27,7 @@ export class Curve implements StrategyInterface {
 
         this.liquidityPool = new Contract(lpAddress, Curve.abi, this.provider);
 
-        this.acceptableSlippage = 1 - slippage;
+        this.acceptableSlippage = (1 - slippage) * 1000;
 
         this.ohmToBorrow = ohmAmount;
     }
@@ -76,17 +76,17 @@ export class Curve implements StrategyInterface {
         const isTokenAMorePrecise = BigNumber.from(tokenADecimals).gt(tokenBDecimals);
 
         if (isPrecisionEqual)
-            return BigNumber.from(reservesA).div(reservesB).mul("100").toString();
+            return BigNumber.from(reservesA).mul("1000").div(reservesB).toString();
 
         if (isTokenAMorePrecise) {
             const decimalAdjustment = BigNumber.from(tokenADecimals).div(tokenBDecimals);
             const adjustedReservesB = decimalAdjustment.mul(reservesB);
-            return BigNumber.from(reservesA).div(adjustedReservesB).mul("100").toString();
+            return BigNumber.from(reservesA).mul("1000").div(adjustedReservesB).toString();
         }
 
         const decimalAdjustment = BigNumber.from(tokenBDecimals).div(tokenADecimals);
         const adjustedReservesA = decimalAdjustment.mul(reservesA);
-        return adjustedReservesA.div(reservesB).mul("100").toString();
+        return adjustedReservesA.mul("1000").div(reservesB).toString();
     }
 
     async getLPTokenAmount(
@@ -115,7 +115,7 @@ export class Curve implements StrategyInterface {
         if (tokenA == OhmAddress) {
             tokenAAmount = this.ohmToBorrow;
             tokenBAmount = BigNumber.from(tokenAAmount)
-                .mul("100")
+                .mul("1000")
                 .div(reserveRatio)
                 .toString();
             otherToken = tokenB;
@@ -123,7 +123,7 @@ export class Curve implements StrategyInterface {
             tokenBAmount = this.ohmToBorrow;
             tokenAAmount = BigNumber.from(tokenBAmount)
                 .mul(reserveRatio)
-                .div("100")
+                .div("1000")
                 .toString();
             otherToken = tokenA;
         }
@@ -132,7 +132,7 @@ export class Curve implements StrategyInterface {
             [tokenAAmount, tokenBAmount],
             true
         );
-        const minLPTokenAmount = BigNumber.from(expectedLPTokenAmount).mul(this.acceptableSlippage).toString();
+        const minLPTokenAmount = BigNumber.from(expectedLPTokenAmount).mul(this.acceptableSlippage).div("1000").toString();
 
         const encodedParams = abiCoder.encode(
             ["uint256[2]", "uint256", "address", "address"],

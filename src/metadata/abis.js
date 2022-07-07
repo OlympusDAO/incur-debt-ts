@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.CurvePoolABI = exports.BalancerHelperABI = exports.BalancerVaultsABI = exports.UniV2PoolABI = exports.ERC20ABI = exports.BalancerVaultABI = exports.BalancerHelpersABI = exports.JoinPoolRequest = exports.UniswapV2ABI = exports.StableSwapABI = exports.IncurDebtABI = void 0;
 exports.IncurDebtABI = [
     "function deposit(uint256)",
@@ -27,7 +27,7 @@ exports.JoinPoolRequest = [
     "tuple(address[] assets, uint256[] maxAmountsIn, bytes userData, bool fromInternalBalance)",
 ];
 exports.BalancerHelpersABI = [
-    "function queryJoin(bytes32, address, address, ".concat(exports.JoinPoolRequest, ") returns (uint256, uint256[])"),
+    `function queryJoin(bytes32, address, address, ${exports.JoinPoolRequest}) returns (uint256, uint256[])`,
 ];
 exports.BalancerVaultABI = [
     "function getPoolTokens(bytes32) view returns (IERC20[], uint256[], uint256)",
@@ -46,7 +46,7 @@ exports.UniV2PoolABI = [
         inputs: [],
         payable: false,
         stateMutability: "nonpayable",
-        type: "constructor"
+        type: "constructor",
     },
     {
         anonymous: false,
@@ -55,23 +55,23 @@ exports.UniV2PoolABI = [
                 indexed: true,
                 internalType: "address",
                 name: "owner",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "spender",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "value",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         name: "Approval",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -80,29 +80,29 @@ exports.UniV2PoolABI = [
                 indexed: true,
                 internalType: "address",
                 name: "sender",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount0",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount1",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "to",
-                type: "address"
+                type: "address",
             },
         ],
         name: "Burn",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -111,23 +111,23 @@ exports.UniV2PoolABI = [
                 indexed: true,
                 internalType: "address",
                 name: "sender",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount0",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount1",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         name: "Mint",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -136,41 +136,41 @@ exports.UniV2PoolABI = [
                 indexed: true,
                 internalType: "address",
                 name: "sender",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount0In",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount1In",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount0Out",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount1Out",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "to",
-                type: "address"
+                type: "address",
             },
         ],
         name: "Swap",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -179,17 +179,17 @@ exports.UniV2PoolABI = [
                 indexed: false,
                 internalType: "uint112",
                 name: "reserve0",
-                type: "uint112"
+                type: "uint112",
             },
             {
                 indexed: false,
                 internalType: "uint112",
                 name: "reserve1",
-                type: "uint112"
+                type: "uint112",
             },
         ],
         name: "Sync",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -198,23 +198,23 @@ exports.UniV2PoolABI = [
                 indexed: true,
                 internalType: "address",
                 name: "from",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "to",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "value",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         name: "Transfer",
-        type: "event"
+        type: "event",
     },
     {
         constant: true,
@@ -223,7 +223,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -232,7 +232,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -241,7 +241,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -253,7 +253,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -265,7 +265,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "bool", name: "", type: "bool" }],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -274,7 +274,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -286,7 +286,7 @@ exports.UniV2PoolABI = [
         ],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -295,7 +295,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -304,7 +304,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "address", name: "", type: "address" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -316,12 +316,12 @@ exports.UniV2PoolABI = [
             {
                 internalType: "uint32",
                 name: "_blockTimestampLast",
-                type: "uint32"
+                type: "uint32",
             },
         ],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -333,7 +333,7 @@ exports.UniV2PoolABI = [
         outputs: [],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -342,7 +342,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -353,7 +353,7 @@ exports.UniV2PoolABI = [
         ],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -362,7 +362,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "string", name: "", type: "string" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -371,7 +371,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -388,7 +388,7 @@ exports.UniV2PoolABI = [
         outputs: [],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -397,7 +397,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -406,7 +406,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -415,7 +415,7 @@ exports.UniV2PoolABI = [
         outputs: [],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -429,7 +429,7 @@ exports.UniV2PoolABI = [
         outputs: [],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -438,7 +438,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "string", name: "", type: "string" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -447,7 +447,7 @@ exports.UniV2PoolABI = [
         outputs: [],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -456,7 +456,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "address", name: "", type: "address" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -465,7 +465,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "address", name: "", type: "address" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: true,
@@ -474,7 +474,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         payable: false,
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -486,7 +486,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "bool", name: "", type: "bool" }],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         constant: false,
@@ -499,7 +499,7 @@ exports.UniV2PoolABI = [
         outputs: [{ internalType: "bool", name: "", type: "bool" }],
         payable: false,
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
 ];
 exports.BalancerVaultsABI = [
@@ -508,22 +508,22 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "contract IAuthorizer",
                 name: "authorizer",
-                type: "address"
+                type: "address",
             },
             { internalType: "contract IWETH", name: "weth", type: "address" },
             {
                 internalType: "uint256",
                 name: "pauseWindowDuration",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 internalType: "uint256",
                 name: "bufferPeriodDuration",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         stateMutability: "nonpayable",
-        type: "constructor"
+        type: "constructor",
     },
     {
         anonymous: false,
@@ -532,11 +532,11 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "contract IAuthorizer",
                 name: "newAuthorizer",
-                type: "address"
+                type: "address",
             },
         ],
         name: "AuthorizerChanged",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -545,29 +545,29 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "contract IERC20",
                 name: "token",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "sender",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "address",
                 name: "recipient",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         name: "ExternalBalanceTransfer",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -576,29 +576,29 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "contract IFlashLoanRecipient",
                 name: "recipient",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: true,
                 internalType: "contract IERC20",
                 name: "token",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amount",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "feeAmount",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         name: "FlashLoan",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -607,23 +607,23 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "address",
                 name: "user",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: true,
                 internalType: "contract IERC20",
                 name: "token",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "int256",
                 name: "delta",
-                type: "int256"
+                type: "int256",
             },
         ],
         name: "InternalBalanceChanged",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -632,11 +632,11 @@ exports.BalancerVaultsABI = [
                 indexed: false,
                 internalType: "bool",
                 name: "paused",
-                type: "bool"
+                type: "bool",
             },
         ],
         name: "PausedStateChanged",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -645,35 +645,35 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "bytes32",
                 name: "poolId",
-                type: "bytes32"
+                type: "bytes32",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "liquidityProvider",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "contract IERC20[]",
                 name: "tokens",
-                type: "address[]"
+                type: "address[]",
             },
             {
                 indexed: false,
                 internalType: "int256[]",
                 name: "deltas",
-                type: "int256[]"
+                type: "int256[]",
             },
             {
                 indexed: false,
                 internalType: "uint256[]",
                 name: "protocolFeeAmounts",
-                type: "uint256[]"
+                type: "uint256[]",
             },
         ],
         name: "PoolBalanceChanged",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -682,35 +682,35 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "bytes32",
                 name: "poolId",
-                type: "bytes32"
+                type: "bytes32",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "assetManager",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: true,
                 internalType: "contract IERC20",
                 name: "token",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "int256",
                 name: "cashDelta",
-                type: "int256"
+                type: "int256",
             },
             {
                 indexed: false,
                 internalType: "int256",
                 name: "managedDelta",
-                type: "int256"
+                type: "int256",
             },
         ],
         name: "PoolBalanceManaged",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -719,23 +719,23 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "bytes32",
                 name: "poolId",
-                type: "bytes32"
+                type: "bytes32",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "poolAddress",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "enum IVault.PoolSpecialization",
                 name: "specialization",
-                type: "uint8"
+                type: "uint8",
             },
         ],
         name: "PoolRegistered",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -744,23 +744,23 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "address",
                 name: "relayer",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: true,
                 internalType: "address",
                 name: "sender",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "bool",
                 name: "approved",
-                type: "bool"
+                type: "bool",
             },
         ],
         name: "RelayerApprovalChanged",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -769,35 +769,35 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "bytes32",
                 name: "poolId",
-                type: "bytes32"
+                type: "bytes32",
             },
             {
                 indexed: true,
                 internalType: "contract IERC20",
                 name: "tokenIn",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: true,
                 internalType: "contract IERC20",
                 name: "tokenOut",
-                type: "address"
+                type: "address",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amountIn",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 indexed: false,
                 internalType: "uint256",
                 name: "amountOut",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         name: "Swap",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -806,17 +806,17 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "bytes32",
                 name: "poolId",
-                type: "bytes32"
+                type: "bytes32",
             },
             {
                 indexed: false,
                 internalType: "contract IERC20[]",
                 name: "tokens",
-                type: "address[]"
+                type: "address[]",
             },
         ],
         name: "TokensDeregistered",
-        type: "event"
+        type: "event",
     },
     {
         anonymous: false,
@@ -825,23 +825,23 @@ exports.BalancerVaultsABI = [
                 indexed: true,
                 internalType: "bytes32",
                 name: "poolId",
-                type: "bytes32"
+                type: "bytes32",
             },
             {
                 indexed: false,
                 internalType: "contract IERC20[]",
                 name: "tokens",
-                type: "address[]"
+                type: "address[]",
             },
             {
                 indexed: false,
                 internalType: "address[]",
                 name: "assetManagers",
-                type: "address[]"
+                type: "address[]",
             },
         ],
         name: "TokensRegistered",
-        type: "event"
+        type: "event",
     },
     {
         inputs: [],
@@ -850,74 +850,74 @@ exports.BalancerVaultsABI = [
             { internalType: "contract IWETH", name: "", type: "address" },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
             {
                 internalType: "enum IVault.SwapKind",
                 name: "kind",
-                type: "uint8"
+                type: "uint8",
             },
             {
                 components: [
                     {
                         internalType: "bytes32",
                         name: "poolId",
-                        type: "bytes32"
+                        type: "bytes32",
                     },
                     {
                         internalType: "uint256",
                         name: "assetInIndex",
-                        type: "uint256"
+                        type: "uint256",
                     },
                     {
                         internalType: "uint256",
                         name: "assetOutIndex",
-                        type: "uint256"
+                        type: "uint256",
                     },
                     {
                         internalType: "uint256",
                         name: "amount",
-                        type: "uint256"
+                        type: "uint256",
                     },
                     { internalType: "bytes", name: "userData", type: "bytes" },
                 ],
                 internalType: "struct IVault.BatchSwapStep[]",
                 name: "swaps",
-                type: "tuple[]"
+                type: "tuple[]",
             },
             {
                 internalType: "contract IAsset[]",
                 name: "assets",
-                type: "address[]"
+                type: "address[]",
             },
             {
                 components: [
                     {
                         internalType: "address",
                         name: "sender",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "bool",
                         name: "fromInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                     {
                         internalType: "address payable",
                         name: "recipient",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "bool",
                         name: "toInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                 ],
                 internalType: "struct IVault.FundManagement",
                 name: "funds",
-                type: "tuple"
+                type: "tuple",
             },
             { internalType: "int256[]", name: "limits", type: "int256[]" },
             { internalType: "uint256", name: "deadline", type: "uint256" },
@@ -927,7 +927,7 @@ exports.BalancerVaultsABI = [
             { internalType: "int256[]", name: "assetDeltas", type: "int256[]" },
         ],
         stateMutability: "payable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -935,13 +935,13 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "contract IERC20[]",
                 name: "tokens",
-                type: "address[]"
+                type: "address[]",
             },
         ],
         name: "deregisterTokens",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -950,48 +950,48 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "address payable",
                 name: "recipient",
-                type: "address"
+                type: "address",
             },
             {
                 components: [
                     {
                         internalType: "contract IAsset[]",
                         name: "assets",
-                        type: "address[]"
+                        type: "address[]",
                     },
                     {
                         internalType: "uint256[]",
                         name: "minAmountsOut",
-                        type: "uint256[]"
+                        type: "uint256[]",
                     },
                     { internalType: "bytes", name: "userData", type: "bytes" },
                     {
                         internalType: "bool",
                         name: "toInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                 ],
                 internalType: "struct IVault.ExitPoolRequest",
                 name: "request",
-                type: "tuple"
+                type: "tuple",
             },
         ],
         name: "exitPool",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
             {
                 internalType: "contract IFlashLoanRecipient",
                 name: "recipient",
-                type: "address"
+                type: "address",
             },
             {
                 internalType: "contract IERC20[]",
                 name: "tokens",
-                type: "address[]"
+                type: "address[]",
             },
             { internalType: "uint256[]", name: "amounts", type: "uint256[]" },
             { internalType: "bytes", name: "userData", type: "bytes" },
@@ -999,14 +999,14 @@ exports.BalancerVaultsABI = [
         name: "flashLoan",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [{ internalType: "bytes4", name: "selector", type: "bytes4" }],
         name: "getActionId",
         outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [],
@@ -1015,14 +1015,14 @@ exports.BalancerVaultsABI = [
             { internalType: "contract IAuthorizer", name: "", type: "address" },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [],
         name: "getDomainSeparator",
         outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1030,7 +1030,7 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "contract IERC20[]",
                 name: "tokens",
-                type: "address[]"
+                type: "address[]",
             },
         ],
         name: "getInternalBalance",
@@ -1038,14 +1038,14 @@ exports.BalancerVaultsABI = [
             { internalType: "uint256[]", name: "balances", type: "uint256[]" },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [{ internalType: "address", name: "user", type: "address" }],
         name: "getNextNonce",
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [],
@@ -1055,16 +1055,16 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "uint256",
                 name: "pauseWindowEndTime",
-                type: "uint256"
+                type: "uint256",
             },
             {
                 internalType: "uint256",
                 name: "bufferPeriodEndTime",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [{ internalType: "bytes32", name: "poolId", type: "bytes32" }],
@@ -1074,11 +1074,11 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "enum IVault.PoolSpecialization",
                 name: "",
-                type: "uint8"
+                type: "uint8",
             },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1092,12 +1092,12 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "uint256",
                 name: "lastChangeBlock",
-                type: "uint256"
+                type: "uint256",
             },
             { internalType: "address", name: "assetManager", type: "address" },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [{ internalType: "bytes32", name: "poolId", type: "bytes32" }],
@@ -1106,17 +1106,17 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "contract IERC20[]",
                 name: "tokens",
-                type: "address[]"
+                type: "address[]",
             },
             { internalType: "uint256[]", name: "balances", type: "uint256[]" },
             {
                 internalType: "uint256",
                 name: "lastChangeBlock",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [],
@@ -1125,11 +1125,11 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "contract ProtocolFeesCollector",
                 name: "",
-                type: "address"
+                type: "address",
             },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1139,7 +1139,7 @@ exports.BalancerVaultsABI = [
         name: "hasApprovedRelayer",
         outputs: [{ internalType: "bool", name: "", type: "bool" }],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1151,29 +1151,29 @@ exports.BalancerVaultsABI = [
                     {
                         internalType: "contract IAsset[]",
                         name: "assets",
-                        type: "address[]"
+                        type: "address[]",
                     },
                     {
                         internalType: "uint256[]",
                         name: "maxAmountsIn",
-                        type: "uint256[]"
+                        type: "uint256[]",
                     },
                     { internalType: "bytes", name: "userData", type: "bytes" },
                     {
                         internalType: "bool",
                         name: "fromInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                 ],
                 internalType: "struct IVault.JoinPoolRequest",
                 name: "request",
-                type: "tuple"
+                type: "tuple",
             },
         ],
         name: "joinPool",
         outputs: [],
         stateMutability: "payable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1182,33 +1182,33 @@ exports.BalancerVaultsABI = [
                     {
                         internalType: "enum IVault.PoolBalanceOpKind",
                         name: "kind",
-                        type: "uint8"
+                        type: "uint8",
                     },
                     {
                         internalType: "bytes32",
                         name: "poolId",
-                        type: "bytes32"
+                        type: "bytes32",
                     },
                     {
                         internalType: "contract IERC20",
                         name: "token",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "uint256",
                         name: "amount",
-                        type: "uint256"
+                        type: "uint256",
                     },
                 ],
                 internalType: "struct IVault.PoolBalanceOp[]",
                 name: "ops",
-                type: "tuple[]"
+                type: "tuple[]",
             },
         ],
         name: "managePoolBalance",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1217,124 +1217,124 @@ exports.BalancerVaultsABI = [
                     {
                         internalType: "enum IVault.UserBalanceOpKind",
                         name: "kind",
-                        type: "uint8"
+                        type: "uint8",
                     },
                     {
                         internalType: "contract IAsset",
                         name: "asset",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "uint256",
                         name: "amount",
-                        type: "uint256"
+                        type: "uint256",
                     },
                     {
                         internalType: "address",
                         name: "sender",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "address payable",
                         name: "recipient",
-                        type: "address"
+                        type: "address",
                     },
                 ],
                 internalType: "struct IVault.UserBalanceOp[]",
                 name: "ops",
-                type: "tuple[]"
+                type: "tuple[]",
             },
         ],
         name: "manageUserBalance",
         outputs: [],
         stateMutability: "payable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
             {
                 internalType: "enum IVault.SwapKind",
                 name: "kind",
-                type: "uint8"
+                type: "uint8",
             },
             {
                 components: [
                     {
                         internalType: "bytes32",
                         name: "poolId",
-                        type: "bytes32"
+                        type: "bytes32",
                     },
                     {
                         internalType: "uint256",
                         name: "assetInIndex",
-                        type: "uint256"
+                        type: "uint256",
                     },
                     {
                         internalType: "uint256",
                         name: "assetOutIndex",
-                        type: "uint256"
+                        type: "uint256",
                     },
                     {
                         internalType: "uint256",
                         name: "amount",
-                        type: "uint256"
+                        type: "uint256",
                     },
                     { internalType: "bytes", name: "userData", type: "bytes" },
                 ],
                 internalType: "struct IVault.BatchSwapStep[]",
                 name: "swaps",
-                type: "tuple[]"
+                type: "tuple[]",
             },
             {
                 internalType: "contract IAsset[]",
                 name: "assets",
-                type: "address[]"
+                type: "address[]",
             },
             {
                 components: [
                     {
                         internalType: "address",
                         name: "sender",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "bool",
                         name: "fromInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                     {
                         internalType: "address payable",
                         name: "recipient",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "bool",
                         name: "toInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                 ],
                 internalType: "struct IVault.FundManagement",
                 name: "funds",
-                type: "tuple"
+                type: "tuple",
             },
         ],
         name: "queryBatchSwap",
         outputs: [{ internalType: "int256[]", name: "", type: "int256[]" }],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
             {
                 internalType: "enum IVault.PoolSpecialization",
                 name: "specialization",
-                type: "uint8"
+                type: "uint8",
             },
         ],
         name: "registerPool",
         outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1342,38 +1342,38 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "contract IERC20[]",
                 name: "tokens",
-                type: "address[]"
+                type: "address[]",
             },
             {
                 internalType: "address[]",
                 name: "assetManagers",
-                type: "address[]"
+                type: "address[]",
             },
         ],
         name: "registerTokens",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
             {
                 internalType: "contract IAuthorizer",
                 name: "newAuthorizer",
-                type: "address"
+                type: "address",
             },
         ],
         name: "setAuthorizer",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [{ internalType: "bool", name: "paused", type: "bool" }],
         name: "setPaused",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1384,7 +1384,7 @@ exports.BalancerVaultsABI = [
         name: "setRelayerApproval",
         outputs: [],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1393,60 +1393,60 @@ exports.BalancerVaultsABI = [
                     {
                         internalType: "bytes32",
                         name: "poolId",
-                        type: "bytes32"
+                        type: "bytes32",
                     },
                     {
                         internalType: "enum IVault.SwapKind",
                         name: "kind",
-                        type: "uint8"
+                        type: "uint8",
                     },
                     {
                         internalType: "contract IAsset",
                         name: "assetIn",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "contract IAsset",
                         name: "assetOut",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "uint256",
                         name: "amount",
-                        type: "uint256"
+                        type: "uint256",
                     },
                     { internalType: "bytes", name: "userData", type: "bytes" },
                 ],
                 internalType: "struct IVault.SingleSwap",
                 name: "singleSwap",
-                type: "tuple"
+                type: "tuple",
             },
             {
                 components: [
                     {
                         internalType: "address",
                         name: "sender",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "bool",
                         name: "fromInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                     {
                         internalType: "address payable",
                         name: "recipient",
-                        type: "address"
+                        type: "address",
                     },
                     {
                         internalType: "bool",
                         name: "toInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                 ],
                 internalType: "struct IVault.FundManagement",
                 name: "funds",
-                type: "tuple"
+                type: "tuple",
             },
             { internalType: "uint256", name: "limit", type: "uint256" },
             { internalType: "uint256", name: "deadline", type: "uint256" },
@@ -1456,11 +1456,11 @@ exports.BalancerVaultsABI = [
             {
                 internalType: "uint256",
                 name: "amountCalculated",
-                type: "uint256"
+                type: "uint256",
             },
         ],
         stateMutability: "payable",
-        type: "function"
+        type: "function",
     },
     { stateMutability: "payable", type: "receive" },
 ];
@@ -1470,11 +1470,11 @@ exports.BalancerHelperABI = [
             {
                 internalType: "contract IVault",
                 name: "_vault",
-                type: "address"
+                type: "address",
             },
         ],
         stateMutability: "nonpayable",
-        type: "constructor"
+        type: "constructor",
     },
     {
         inputs: [
@@ -1486,23 +1486,23 @@ exports.BalancerHelperABI = [
                     {
                         internalType: "contract IAsset[]",
                         name: "assets",
-                        type: "address[]"
+                        type: "address[]",
                     },
                     {
                         internalType: "uint256[]",
                         name: "minAmountsOut",
-                        type: "uint256[]"
+                        type: "uint256[]",
                     },
                     { internalType: "bytes", name: "userData", type: "bytes" },
                     {
                         internalType: "bool",
                         name: "toInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                 ],
                 internalType: "struct IVault.ExitPoolRequest",
                 name: "request",
-                type: "tuple"
+                type: "tuple",
             },
         ],
         name: "queryExit",
@@ -1511,11 +1511,11 @@ exports.BalancerHelperABI = [
             {
                 internalType: "uint256[]",
                 name: "amountsOut",
-                type: "uint256[]"
+                type: "uint256[]",
             },
         ],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [
@@ -1527,23 +1527,23 @@ exports.BalancerHelperABI = [
                     {
                         internalType: "contract IAsset[]",
                         name: "assets",
-                        type: "address[]"
+                        type: "address[]",
                     },
                     {
                         internalType: "uint256[]",
                         name: "maxAmountsIn",
-                        type: "uint256[]"
+                        type: "uint256[]",
                     },
                     { internalType: "bytes", name: "userData", type: "bytes" },
                     {
                         internalType: "bool",
                         name: "fromInternalBalance",
-                        type: "bool"
+                        type: "bool",
                     },
                 ],
                 internalType: "struct IVault.JoinPoolRequest",
                 name: "request",
-                type: "tuple"
+                type: "tuple",
             },
         ],
         name: "queryJoin",
@@ -1552,7 +1552,7 @@ exports.BalancerHelperABI = [
             { internalType: "uint256[]", name: "amountsIn", type: "uint256[]" },
         ],
         stateMutability: "nonpayable",
-        type: "function"
+        type: "function",
     },
     {
         inputs: [],
@@ -1561,7 +1561,7 @@ exports.BalancerHelperABI = [
             { internalType: "contract IVault", name: "", type: "address" },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
     },
 ];
 exports.CurvePoolABI = [
@@ -1574,7 +1574,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "tokens_bought", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "TokenExchangeUnderlying",
@@ -1586,7 +1586,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "tokens_bought", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "AddLiquidity",
@@ -1598,7 +1598,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "token_supply", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "RemoveLiquidity",
@@ -1609,7 +1609,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "token_supply", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "RemoveLiquidityOne",
@@ -1619,7 +1619,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "coin_amount", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "RemoveLiquidityImbalance",
@@ -1631,7 +1631,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "token_supply", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "CommitNewAdmin",
@@ -1640,13 +1640,13 @@ exports.CurvePoolABI = [
             { type: "address", name: "admin", indexed: true },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "NewAdmin",
         inputs: [{ type: "address", name: "admin", indexed: true }],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "CommitNewFee",
@@ -1656,7 +1656,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "admin_fee", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "NewFee",
@@ -1665,7 +1665,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "admin_fee", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "RampA",
@@ -1676,7 +1676,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "future_time", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         name: "StopRampA",
@@ -1685,7 +1685,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "t", indexed: false },
         ],
         anonymous: false,
-        type: "event"
+        type: "event",
     },
     {
         outputs: [],
@@ -1698,7 +1698,7 @@ exports.CurvePoolABI = [
             { type: "uint256", name: "_admin_fee" },
         ],
         stateMutability: "nonpayable",
-        type: "constructor"
+        type: "constructor",
     },
     {
         name: "A",
@@ -1706,7 +1706,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 5289
+        gas: 5289,
     },
     {
         name: "A_precise",
@@ -1714,7 +1714,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 5251
+        gas: 5251,
     },
     {
         name: "balances",
@@ -1722,7 +1722,7 @@ exports.CurvePoolABI = [
         inputs: [{ type: "uint256", name: "i" }],
         stateMutability: "view",
         type: "function",
-        gas: 5076
+        gas: 5076,
     },
     {
         name: "get_virtual_price",
@@ -1730,7 +1730,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 1114301
+        gas: 1114301,
     },
     {
         name: "calc_token_amount",
@@ -1741,7 +1741,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "view",
         type: "function",
-        gas: 2218181
+        gas: 2218181,
     },
     {
         name: "add_liquidity",
@@ -1752,7 +1752,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "payable",
         type: "function",
-        gas: 3484118
+        gas: 3484118,
     },
     {
         name: "get_dy",
@@ -1764,7 +1764,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "view",
         type: "function",
-        gas: 2654541
+        gas: 2654541,
     },
     {
         name: "exchange",
@@ -1777,7 +1777,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "payable",
         type: "function",
-        gas: 2810134
+        gas: 2810134,
     },
     {
         name: "remove_liquidity",
@@ -1788,7 +1788,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 160545
+        gas: 160545,
     },
     {
         name: "remove_liquidity_imbalance",
@@ -1799,7 +1799,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 3519382
+        gas: 3519382,
     },
     {
         name: "calc_withdraw_one_coin",
@@ -1810,7 +1810,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "view",
         type: "function",
-        gas: 1435
+        gas: 1435,
     },
     {
         name: "remove_liquidity_one_coin",
@@ -1822,7 +1822,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 4113806
+        gas: 4113806,
     },
     {
         name: "ramp_A",
@@ -1833,7 +1833,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 151834
+        gas: 151834,
     },
     {
         name: "stop_ramp_A",
@@ -1841,7 +1841,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 148595
+        gas: 148595,
     },
     {
         name: "commit_new_fee",
@@ -1852,7 +1852,7 @@ exports.CurvePoolABI = [
         ],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 110431
+        gas: 110431,
     },
     {
         name: "apply_new_fee",
@@ -1860,7 +1860,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 153115
+        gas: 153115,
     },
     {
         name: "revert_new_parameters",
@@ -1868,7 +1868,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 21865
+        gas: 21865,
     },
     {
         name: "commit_transfer_ownership",
@@ -1876,7 +1876,7 @@ exports.CurvePoolABI = [
         inputs: [{ type: "address", name: "_owner" }],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 74603
+        gas: 74603,
     },
     {
         name: "apply_transfer_ownership",
@@ -1884,7 +1884,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 116583
+        gas: 116583,
     },
     {
         name: "revert_transfer_ownership",
@@ -1892,7 +1892,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 21955
+        gas: 21955,
     },
     {
         name: "withdraw_admin_fees",
@@ -1900,7 +1900,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 137597
+        gas: 137597,
     },
     {
         name: "donate_admin_fees",
@@ -1908,7 +1908,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 42144
+        gas: 42144,
     },
     {
         name: "kill_me",
@@ -1916,7 +1916,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 37938
+        gas: 37938,
     },
     {
         name: "unkill_me",
@@ -1924,7 +1924,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "nonpayable",
         type: "function",
-        gas: 22075
+        gas: 22075,
     },
     {
         name: "coins",
@@ -1932,7 +1932,7 @@ exports.CurvePoolABI = [
         inputs: [{ type: "uint256", name: "arg0" }],
         stateMutability: "view",
         type: "function",
-        gas: 2160
+        gas: 2160,
     },
     {
         name: "admin_balances",
@@ -1940,7 +1940,7 @@ exports.CurvePoolABI = [
         inputs: [{ type: "uint256", name: "arg0" }],
         stateMutability: "view",
         type: "function",
-        gas: 2190
+        gas: 2190,
     },
     {
         name: "fee",
@@ -1948,7 +1948,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2111
+        gas: 2111,
     },
     {
         name: "admin_fee",
@@ -1956,7 +1956,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2141
+        gas: 2141,
     },
     {
         name: "owner",
@@ -1964,7 +1964,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2171
+        gas: 2171,
     },
     {
         name: "lp_token",
@@ -1972,7 +1972,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2201
+        gas: 2201,
     },
     {
         name: "initial_A",
@@ -1980,7 +1980,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2231
+        gas: 2231,
     },
     {
         name: "future_A",
@@ -1988,7 +1988,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2261
+        gas: 2261,
     },
     {
         name: "initial_A_time",
@@ -1996,7 +1996,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2291
+        gas: 2291,
     },
     {
         name: "future_A_time",
@@ -2004,7 +2004,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2321
+        gas: 2321,
     },
     {
         name: "admin_actions_deadline",
@@ -2012,7 +2012,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2351
+        gas: 2351,
     },
     {
         name: "transfer_ownership_deadline",
@@ -2020,7 +2020,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2381
+        gas: 2381,
     },
     {
         name: "future_fee",
@@ -2028,7 +2028,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2411
+        gas: 2411,
     },
     {
         name: "future_admin_fee",
@@ -2036,7 +2036,7 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2441
+        gas: 2441,
     },
     {
         name: "future_owner",
@@ -2044,6 +2044,6 @@ exports.CurvePoolABI = [
         inputs: [],
         stateMutability: "view",
         type: "function",
-        gas: 2471
+        gas: 2471,
     },
 ];
