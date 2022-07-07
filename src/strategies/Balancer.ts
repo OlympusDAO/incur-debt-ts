@@ -1,3 +1,4 @@
+import { StrategyInterface } from "../interfaces/strategy";
 import { Contract, providers } from "ethers";
 import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
 import { BalancerHelpersABI, BalancerVaultABI } from "../metadata/abis";
@@ -9,7 +10,7 @@ import {
 
 type JsonRpcProvider = providers.JsonRpcProvider;
 
-export class Balancer {
+export class Balancer implements StrategyInterface {
     static abi = BalancerVaultABI;
 
     private msgSender: string;
@@ -80,7 +81,7 @@ export class Balancer {
         return true;
     }
 
-    async getEncodedParams() {
+    async getEncodedParams(): Promise<string> {
         if (!this.verifyOtherTokens())
             throw new Error("Passed tokens do not match the pool.");
 

@@ -1,3 +1,4 @@
+import { StrategyInterface } from "../interfaces/strategy";
 import { BigNumber, Contract, providers } from "ethers";
 import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
 import { ERC20ABI, StableSwapABI } from "../metadata/abis";
@@ -5,7 +6,7 @@ import { OhmAddress } from "../metadata/addresses";
 
 type JsonRpcProvider = providers.JsonRpcProvider;
 
-export class Curve {
+export class Curve implements StrategyInterface {
     static abi = StableSwapABI;
 
     private liquidityPool: Contract;
@@ -100,7 +101,7 @@ export class Curve {
         return expectedLPTokenAmount;
     }
 
-    async getEncodedParams() {
+    async getEncodedParams(): Promise<string> {
         const tokenA = await this.getTokenA();
         let tokenAAmount: string;
 
