@@ -35,6 +35,16 @@ export const BalancerVaultABI = [
     "function getPoolTokens(bytes32) view returns (IERC20[], uint256[], uint256)",
 ];
 
+export const ERC20ABI = [
+    "function approve(address, uint256) returns (bool)",
+    "function transferFrom(address, address, uint256) returns (bool)",
+    "function transfer(address, uint256) returns (bool)",
+    "function totalSupply() view returns (uint256)",
+    "function balanceOf(address) view returns (uint256)",
+    "function decimals() view returns(uint256)",
+    "function allowance(address, address) view returns (uint256)",
+];
+
 export const UniV2PoolABI = [
     {
         inputs: [],
