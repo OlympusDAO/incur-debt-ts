@@ -94,12 +94,13 @@ export class Curve {
             [tokenAAmount, tokenBAmount],
             true
         );
+        const minLPTokenAmount = BigNumber.from(expectedLPTokenAmount).mul(this.acceptableSlippage).toString();
 
         const encodedParams = abiCoder.encode(
             ["uint256[2]", "uint256", "address", "address"],
             [
                 [tokenAAmount, tokenBAmount],
-                expectedLPTokenAmount,
+                minLPTokenAmount,
                 otherToken,
                 this.liquidityPool.address,
             ]

@@ -52,7 +52,7 @@ export class IncurDebt {
                 provider
             );
             const encodedParams = UniStrategy.getEncodedParams();
-            const tx = await this.contract.callStatic.createLP(
+            const tx = await this.contract.populateTransaction.createLP(
                 ohmAmount,
                 strategies[strategy],
                 encodedParams
@@ -72,7 +72,7 @@ export class IncurDebt {
             );
 
             const encodedParams = BalancerStrategy.getEncodedParams();
-            const tx = await this.contract.callStatic.createLP(
+            const tx = await this.contract.populateTransaction.createLP(
                 ohmAmount,
                 strategies[strategy],
                 encodedParams

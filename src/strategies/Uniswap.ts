@@ -1,4 +1,4 @@
-import { BigNumber, Contract, providers } from "ethers";
+import { BigNumber, Contract, ethers, providers } from "ethers";
 import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
 import { UniswapV2ABI } from "../metadata/abis";
 import { OhmAddress } from "../metadata/addresses";
@@ -22,7 +22,7 @@ export class Uniswap {
     ) {
         this.liquidityPool = new Contract(lpAddress, Uniswap.abi, provider);
 
-        this.acceptableSlippage = 1 - slippage;
+        this.acceptableSlippage = (1 - slippage) * 100;
 
         this.ohmToBorrow = ohmAmount;
     }
@@ -43,10 +43,11 @@ export class Uniswap {
         if (!this.liquidityPool)
             throw new Error("Liquidity pool not initialized");
 
-        const { reserves0, reserves1, lastTimestamp } =
-            await this.liquidityPool.getReserves();
-        const reserveRatio = BigNumber.from(reserves0).div(
-            BigNumber.from(reserves1)
+        const reservesInfo = await this.liquidityPool.getReserves();
+
+        const reserveRatio = (
+            BigNumber.from(reservesInfo[0]).div(BigNumber.from(reservesInfo[1])
+        ).mul("100")
         );
 
         return reserveRatio.toString();
@@ -67,25 +68,31 @@ export class Uniswap {
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
+                .div("100")
                 .toString();
 
             tokenBAmount = BigNumber.from(tokenAAmount)
+                .mul("100")
                 .div(reserveRatio)
                 .toString();
             minTokenBOut = BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
+                .div("100")
                 .toString();
         } else {
             tokenBAmount = this.ohmToBorrow;
             minTokenBOut = BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
+                .div("100")
                 .toString();
 
             tokenAAmount = BigNumber.from(tokenBAmount)
                 .mul(reserveRatio)
+                .div("100")
                 .toString();
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
+                .div("100")
                 .toString();
         }
 
