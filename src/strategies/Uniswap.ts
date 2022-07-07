@@ -74,11 +74,9 @@ export class Uniswap implements StrategyInterface {
 
         const reservesA = reservesInfo[0];
         const tokenADecimals = await this.getTokenADecimals();
-        console.log(tokenADecimals);
 
         const reservesB = reservesInfo[1];
         const tokenBDecimals = await this.getTokenBDecimals();
-        console.log(tokenBDecimals);
 
         const isPrecisionEqual = BigNumber.from(tokenADecimals).eq(tokenBDecimals);
         const isTokenAMorePrecise = BigNumber.from(tokenADecimals).gt(tokenBDecimals);
@@ -107,7 +105,6 @@ export class Uniswap implements StrategyInterface {
         let minTokenBOut: string;
 
         const reserveRatio = await this.getReserveRatio();
-        console.log(reserveRatio);
 
         if (tokenA == OhmAddress) {
             tokenAAmount = this.ohmToBorrow;
@@ -140,11 +137,6 @@ export class Uniswap implements StrategyInterface {
                 .div("1000")
                 .toString();
         }
-
-        console.log(tokenAAmount);
-        console.log(minTokenAOut);
-        console.log(tokenBAmount);
-        console.log(minTokenBOut);
 
         const encodedParams = abiCoder.encode(
             ["address", "address", "uint256", "uint256", "uint256", "uint256"],

@@ -62,10 +62,8 @@ class Uniswap {
             const reservesInfo = yield this.liquidityPool.getReserves();
             const reservesA = reservesInfo[0];
             const tokenADecimals = yield this.getTokenADecimals();
-            console.log(tokenADecimals);
             const reservesB = reservesInfo[1];
             const tokenBDecimals = yield this.getTokenBDecimals();
-            console.log(tokenBDecimals);
             const isPrecisionEqual = ethers_1.BigNumber.from(tokenADecimals).eq(tokenBDecimals);
             const isTokenAMorePrecise = ethers_1.BigNumber.from(tokenADecimals).gt(tokenBDecimals);
             if (isPrecisionEqual)
@@ -89,7 +87,6 @@ class Uniswap {
             let tokenBAmount;
             let minTokenBOut;
             const reserveRatio = yield this.getReserveRatio();
-            console.log(reserveRatio);
             if (tokenA == addresses_1.OhmAddress) {
                 tokenAAmount = this.ohmToBorrow;
                 minTokenAOut = ethers_1.BigNumber.from(tokenAAmount)
@@ -120,10 +117,6 @@ class Uniswap {
                     .div("1000")
                     .toString();
             }
-            console.log(tokenAAmount);
-            console.log(minTokenAOut);
-            console.log(tokenBAmount);
-            console.log(minTokenBOut);
             const encodedParams = utils_1.defaultAbiCoder.encode(["address", "address", "uint256", "uint256", "uint256", "uint256"], [
                 tokenA,
                 tokenB,
