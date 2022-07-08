@@ -23,7 +23,7 @@ export class IncurDebt {
         this._context = context;
         this._strategies = StrategyAddresses;
         this.contract = new Contract(
-            IncurDebtAddress,
+            IncurDebtAddress(context.chainId)!,
             IncurDebt.abi,
             context.provider
         );

@@ -1,7 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BalancerHelperAddress = exports.BalancerVaultAddress = exports.StrategyAddresses = exports.OhmAddress = exports.IncurDebtAddress = void 0;
-exports.IncurDebtAddress = "0x544f54c5F38D6D6b96331f7E75CB202B5ea72eca";
+const IncurDebtAddress = (chainId) => {
+    if (chainId == 1)
+        return "0x544f54c5F38D6D6b96331f7E75CB202B5ea72eca";
+    if (chainId == 5)
+        return "0x5Fd05A2f73C3cC77a1d2CdEEae4C0B0149E30b94";
+};
+exports.IncurDebtAddress = IncurDebtAddress;
 exports.OhmAddress = "0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5";
 exports.StrategyAddresses = {
     curve: "0xFc495557A638B2322443FAf76F5e860085C36D38",

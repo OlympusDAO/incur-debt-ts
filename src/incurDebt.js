@@ -21,7 +21,7 @@ class IncurDebt {
     constructor(context) {
         this._context = context;
         this._strategies = addresses_1.StrategyAddresses;
-        this.contract = new ethers_1.Contract(addresses_1.IncurDebtAddress, IncurDebt.abi, context.provider);
+        this.contract = new ethers_1.Contract((0, addresses_1.IncurDebtAddress)(context.chainId), IncurDebt.abi, context.provider);
     }
     encodeBorrowParameters(sender, strategy, lpAddress, slippage = 0.01, ohmAmount, otherTokens = [], otherTokenAmounts = []) {
         return __awaiter(this, void 0, void 0, function* () {
