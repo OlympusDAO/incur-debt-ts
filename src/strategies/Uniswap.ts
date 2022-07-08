@@ -102,8 +102,9 @@ export class Uniswap implements StrategyInterface {
                 .toString();
 
         if (isTokenAMorePrecise) {
-            const decimalAdjustment =
-                BigNumber.from(tokenADecimals).div(tokenBDecimals);
+            const decimalAdjustment = BigNumber.from("10").pow(
+                BigNumber.from(tokenADecimals).sub(tokenBDecimals)
+            );
             const adjustedReservesB = decimalAdjustment.mul(reservesB);
             return BigNumber.from(reservesA)
                 .mul("1000")
@@ -111,8 +112,9 @@ export class Uniswap implements StrategyInterface {
                 .toString();
         }
 
-        const decimalAdjustment =
-            BigNumber.from(tokenBDecimals).div(tokenADecimals);
+        const decimalAdjustment = BigNumber.from("10").pow(
+            BigNumber.from(tokenBDecimals).sub(tokenADecimals)
+        );
         const adjustedReservesA = decimalAdjustment.mul(reservesA);
         return adjustedReservesA.mul("1000").div(reservesB).toString();
     }
@@ -126,6 +128,9 @@ export class Uniswap implements StrategyInterface {
         let tokenBAmount: string;
         let minTokenBOut: string;
 
+        let ohmDecimals: string;
+        let otherDecimals: string;
+
         const reserveRatio = await this.getReserveRatio();
 
         if (tokenA == OhmAddress) {
@@ -134,11 +139,29 @@ export class Uniswap implements StrategyInterface {
                 .mul(this.acceptableSlippage)
                 .div("1000")
                 .toString();
+            ohmDecimals = await this.getTokenADecimals();
+            otherDecimals = await this.getTokenBDecimals();
+            const decimalDiff = BigNumber.from(otherDecimals).sub(ohmDecimals);
 
-            tokenBAmount = BigNumber.from(tokenAAmount)
-                .mul("1000")
-                .div(reserveRatio)
-                .toString();
+            if (decimalDiff.gt("0")) {
+                tokenBAmount = BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .mul(BigNumber.from("10").pow(decimalDiff))
+                    .div(reserveRatio)
+                    .toString();
+            } else if (decimalDiff.lt("0")) {
+                tokenBAmount = BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .div(reserveRatio)
+                    .div(BigNumber.from("10").pow(decimalDiff.abs()))
+                    .toString();
+            } else {
+                tokenBAmount = BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .div(reserveRatio)
+                    .toString();
+            }
+
             minTokenBOut = BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
                 .div("1000")
@@ -149,11 +172,29 @@ export class Uniswap implements StrategyInterface {
                 .mul(this.acceptableSlippage)
                 .div("1000")
                 .toString();
+            ohmDecimals = await this.getTokenBDecimals();
+            otherDecimals = await this.getTokenBDecimals();
+            const decimalDiff = BigNumber.from(otherDecimals).sub(ohmDecimals);
 
-            tokenAAmount = BigNumber.from(tokenBAmount)
-                .mul(reserveRatio)
-                .div("1000")
-                .toString();
+            if (decimalDiff.gt("0")) {
+                tokenAAmount = BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .mul(BigNumber.from("10").pow(decimalDiff))
+                    .div("1000")
+                    .toString();
+            } else if (decimalDiff.lt("0")) {
+                tokenAAmount = BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .div(BigNumber.from("10").pow(decimalDiff.abs()))
+                    .div("1000")
+                    .toString();
+            } else {
+                tokenAAmount = BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .div("1000")
+                    .toString();
+            }
+
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
                 .div("1000")

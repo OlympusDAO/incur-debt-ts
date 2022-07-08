@@ -72,14 +72,14 @@ class Uniswap {
                     .div(reservesB)
                     .toString();
             if (isTokenAMorePrecise) {
-                const decimalAdjustment = ethers_1.BigNumber.from(tokenADecimals).div(tokenBDecimals);
+                const decimalAdjustment = ethers_1.BigNumber.from("10").pow(ethers_1.BigNumber.from(tokenADecimals).sub(tokenBDecimals));
                 const adjustedReservesB = decimalAdjustment.mul(reservesB);
                 return ethers_1.BigNumber.from(reservesA)
                     .mul("1000")
                     .div(adjustedReservesB)
                     .toString();
             }
-            const decimalAdjustment = ethers_1.BigNumber.from(tokenBDecimals).div(tokenADecimals);
+            const decimalAdjustment = ethers_1.BigNumber.from("10").pow(ethers_1.BigNumber.from(tokenBDecimals).sub(tokenADecimals));
             const adjustedReservesA = decimalAdjustment.mul(reservesA);
             return adjustedReservesA.mul("1000").div(reservesB).toString();
         });
@@ -92,6 +92,8 @@ class Uniswap {
             const tokenB = yield this.getTokenB();
             let tokenBAmount;
             let minTokenBOut;
+            let ohmDecimals;
+            let otherDecimals;
             const reserveRatio = yield this.getReserveRatio();
             if (tokenA == addresses_1.OhmAddress) {
                 tokenAAmount = this.ohmToBorrow;
@@ -99,10 +101,29 @@ class Uniswap {
                     .mul(this.acceptableSlippage)
                     .div("1000")
                     .toString();
-                tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
-                    .mul("1000")
-                    .div(reserveRatio)
-                    .toString();
+                ohmDecimals = yield this.getTokenADecimals();
+                otherDecimals = yield this.getTokenBDecimals();
+                const decimalDiff = ethers_1.BigNumber.from(otherDecimals).sub(ohmDecimals);
+                if (decimalDiff.gt("0")) {
+                    tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
+                        .mul("1000")
+                        .mul(ethers_1.BigNumber.from("10").pow(decimalDiff))
+                        .div(reserveRatio)
+                        .toString();
+                }
+                else if (decimalDiff.lt("0")) {
+                    tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
+                        .mul("1000")
+                        .div(reserveRatio)
+                        .div(ethers_1.BigNumber.from("10").pow(decimalDiff.abs()))
+                        .toString();
+                }
+                else {
+                    tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
+                        .mul("1000")
+                        .div(reserveRatio)
+                        .toString();
+                }
                 minTokenBOut = ethers_1.BigNumber.from(tokenBAmount)
                     .mul(this.acceptableSlippage)
                     .div("1000")
@@ -114,10 +135,29 @@ class Uniswap {
                     .mul(this.acceptableSlippage)
                     .div("1000")
                     .toString();
-                tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
-                    .mul(reserveRatio)
-                    .div("1000")
-                    .toString();
+                ohmDecimals = yield this.getTokenBDecimals();
+                otherDecimals = yield this.getTokenBDecimals();
+                const decimalDiff = ethers_1.BigNumber.from(otherDecimals).sub(ohmDecimals);
+                if (decimalDiff.gt("0")) {
+                    tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
+                        .mul(reserveRatio)
+                        .mul(ethers_1.BigNumber.from("10").pow(decimalDiff))
+                        .div("1000")
+                        .toString();
+                }
+                else if (decimalDiff.lt("0")) {
+                    tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
+                        .mul(reserveRatio)
+                        .div(ethers_1.BigNumber.from("10").pow(decimalDiff.abs()))
+                        .div("1000")
+                        .toString();
+                }
+                else {
+                    tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
+                        .mul(reserveRatio)
+                        .div("1000")
+                        .toString();
+                }
                 minTokenAOut = ethers_1.BigNumber.from(tokenAAmount)
                     .mul(this.acceptableSlippage)
                     .div("1000")
