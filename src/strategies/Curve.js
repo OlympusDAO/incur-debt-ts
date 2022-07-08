@@ -66,11 +66,17 @@ class Curve {
             const isPrecisionEqual = ethers_1.BigNumber.from(tokenADecimals).eq(tokenBDecimals);
             const isTokenAMorePrecise = ethers_1.BigNumber.from(tokenADecimals).gt(tokenBDecimals);
             if (isPrecisionEqual)
-                return ethers_1.BigNumber.from(reservesA).mul("1000").div(reservesB).toString();
+                return ethers_1.BigNumber.from(reservesA)
+                    .mul("1000")
+                    .div(reservesB)
+                    .toString();
             if (isTokenAMorePrecise) {
                 const decimalAdjustment = ethers_1.BigNumber.from(tokenADecimals).div(tokenBDecimals);
                 const adjustedReservesB = decimalAdjustment.mul(reservesB);
-                return ethers_1.BigNumber.from(reservesA).mul("1000").div(adjustedReservesB).toString();
+                return ethers_1.BigNumber.from(reservesA)
+                    .mul("1000")
+                    .div(adjustedReservesB)
+                    .toString();
             }
             const decimalAdjustment = ethers_1.BigNumber.from(tokenBDecimals).div(tokenADecimals);
             const adjustedReservesA = decimalAdjustment.mul(reservesA);
@@ -110,7 +116,10 @@ class Curve {
                 otherToken = tokenA;
             }
             const expectedLPTokenAmount = yield this.getLPTokenAmount([tokenAAmount, tokenBAmount], true);
-            const minLPTokenAmount = ethers_1.BigNumber.from(expectedLPTokenAmount).mul(this.acceptableSlippage).div("1000").toString();
+            const minLPTokenAmount = ethers_1.BigNumber.from(expectedLPTokenAmount)
+                .mul(this.acceptableSlippage)
+                .div("1000")
+                .toString();
             const encodedParams = utils_1.defaultAbiCoder.encode(["uint256[2]", "uint256", "address", "address"], [
                 [tokenAAmount, tokenBAmount],
                 minLPTokenAmount,

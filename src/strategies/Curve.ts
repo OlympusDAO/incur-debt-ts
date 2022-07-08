@@ -42,7 +42,11 @@ export class Curve implements StrategyInterface {
         if (!this.liquidityPool)
             throw new Error("Liquidity pool not initialized");
         const tokenAAddress = await this.liquidityPool.coins(0);
-        const tokenAContract = new Contract(tokenAAddress, ERC20ABI, this.provider);
+        const tokenAContract = new Contract(
+            tokenAAddress,
+            ERC20ABI,
+            this.provider
+        );
         const tokenADecimals = await tokenAContract.decimals();
         return tokenADecimals;
     }
@@ -57,7 +61,11 @@ export class Curve implements StrategyInterface {
         if (!this.liquidityPool)
             throw new Error("Liquidity pool not initialized");
         const tokenBAddress = await this.liquidityPool.coins(1);
-        const tokenBContract = new Contract(tokenBAddress, ERC20ABI, this.provider);
+        const tokenBContract = new Contract(
+            tokenBAddress,
+            ERC20ABI,
+            this.provider
+        );
         const tokenBDecimals = await tokenBContract.decimals();
         return tokenBDecimals;
     }
@@ -72,19 +80,29 @@ export class Curve implements StrategyInterface {
         const reservesB = await this.liquidityPool.balances(1);
         const tokenBDecimals = await this.getTokenBDecimals();
 
-        const isPrecisionEqual = BigNumber.from(tokenADecimals).eq(tokenBDecimals);
-        const isTokenAMorePrecise = BigNumber.from(tokenADecimals).gt(tokenBDecimals);
+        const isPrecisionEqual =
+            BigNumber.from(tokenADecimals).eq(tokenBDecimals);
+        const isTokenAMorePrecise =
+            BigNumber.from(tokenADecimals).gt(tokenBDecimals);
 
         if (isPrecisionEqual)
-            return BigNumber.from(reservesA).mul("1000").div(reservesB).toString();
+            return BigNumber.from(reservesA)
+                .mul("1000")
+                .div(reservesB)
+                .toString();
 
         if (isTokenAMorePrecise) {
-            const decimalAdjustment = BigNumber.from(tokenADecimals).div(tokenBDecimals);
+            const decimalAdjustment =
+                BigNumber.from(tokenADecimals).div(tokenBDecimals);
             const adjustedReservesB = decimalAdjustment.mul(reservesB);
-            return BigNumber.from(reservesA).mul("1000").div(adjustedReservesB).toString();
+            return BigNumber.from(reservesA)
+                .mul("1000")
+                .div(adjustedReservesB)
+                .toString();
         }
 
-        const decimalAdjustment = BigNumber.from(tokenBDecimals).div(tokenADecimals);
+        const decimalAdjustment =
+            BigNumber.from(tokenBDecimals).div(tokenADecimals);
         const adjustedReservesA = decimalAdjustment.mul(reservesA);
         return adjustedReservesA.mul("1000").div(reservesB).toString();
     }
@@ -132,7 +150,10 @@ export class Curve implements StrategyInterface {
             [tokenAAmount, tokenBAmount],
             true
         );
-        const minLPTokenAmount = BigNumber.from(expectedLPTokenAmount).mul(this.acceptableSlippage).div("1000").toString();
+        const minLPTokenAmount = BigNumber.from(expectedLPTokenAmount)
+            .mul(this.acceptableSlippage)
+            .div("1000")
+            .toString();
 
         const encodedParams = abiCoder.encode(
             ["uint256[2]", "uint256", "address", "address"],

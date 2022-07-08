@@ -110,16 +110,13 @@ export class Balancer implements StrategyInterface {
                 joinPoolRequest
             );
 
-        const minPoolTokensOut = BigNumber.from(expectedPoolTokensOut).mul(this.acceptableSlippage).div("1000");
+        const minPoolTokensOut = BigNumber.from(expectedPoolTokensOut)
+            .mul(this.acceptableSlippage)
+            .div("1000");
 
         const encodedParams = abiCoder.encode(
             ["bytes", "address[]", "uint256[]", "uint256"],
-            [
-                this.pool,
-                this.assets,
-                this.assetAmounts,
-                minPoolTokensOut,
-            ]
+            [this.pool, this.assets, this.assetAmounts, minPoolTokensOut]
         );
 
         return encodedParams;
