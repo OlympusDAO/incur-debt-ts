@@ -86,7 +86,7 @@ export class Balancer implements StrategyInterface {
         return true;
     }
 
-    async getEncodedParams(): Promise<string> {
+    async getAddLiquidityCalldata(): Promise<string> {
         if (!this.verifyOtherTokens())
             throw new Error("Passed tokens do not match the pool.");
 

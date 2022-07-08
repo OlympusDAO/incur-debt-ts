@@ -6,7 +6,6 @@ import { Context } from "./context";
 import { Balancer } from "./strategies/Balancer";
 import { Curve } from "./strategies/Curve";
 import { Uniswap } from "./strategies/Uniswap";
-import { defaultAbiCoder } from "ethers/lib/utils";
 
 type JsonRpcProvider = providers.JsonRpcProvider;
 
@@ -29,7 +28,7 @@ export class IncurDebt {
         );
     }
 
-    async encodeBorrowParameters(
+    async getAddLiquidityTx(
         sender: string,
         strategy: string,
         lpAddress: string,
@@ -77,11 +76,7 @@ export class IncurDebt {
                 provider
             );
 
-        const encodedParams = await strategyInstance.getEncodedParams();
-        const decodedParams = defaultAbiCoder.decode(
-            ["address", "address", "uint256", "uint256", "uint256", "uint256"],
-            encodedParams
-        );
+        const encodedParams = await strategyInstance.getAddLiquidityCalldata();
 
         tx = await this.contract.populateTransaction.createLP(
             ohmAmount,

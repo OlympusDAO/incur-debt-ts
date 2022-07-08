@@ -91,7 +91,7 @@ class Curve {
             return expectedLPTokenAmount;
         });
     }
-    getEncodedParams() {
+    getAddLiquidityCalldata() {
         return __awaiter(this, void 0, void 0, function* () {
             const tokenA = yield this.getTokenA();
             let tokenAAmount;

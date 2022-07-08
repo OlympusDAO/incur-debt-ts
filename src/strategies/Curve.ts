@@ -119,7 +119,7 @@ export class Curve implements StrategyInterface {
         return expectedLPTokenAmount;
     }
 
-    async getEncodedParams(): Promise<string> {
+    async getAddLiquidityCalldata(): Promise<string> {
         const tokenA = await this.getTokenA();
         let tokenAAmount: string;
 

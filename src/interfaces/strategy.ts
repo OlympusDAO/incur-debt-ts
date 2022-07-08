@@ -1,3 +1,3 @@
 export interface StrategyInterface {
-    getEncodedParams(): Promise<string>;
+    getAddLiquidityCalldata(): Promise<string>;
 }

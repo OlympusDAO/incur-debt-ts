@@ -47,7 +47,7 @@ class Balancer {
             return true;
         });
     }
-    getEncodedParams() {
+    getAddLiquidityCalldata() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.verifyOtherTokens())
                 throw new Error("Passed tokens do not match the pool.");

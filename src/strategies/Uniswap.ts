@@ -119,7 +119,7 @@ export class Uniswap implements StrategyInterface {
         return adjustedReservesA.mul("1000").div(reservesB).toString();
     }
 
-    async getEncodedParams(): Promise<string> {
+    async getAddLiquidityCalldata(): Promise<string> {
         const tokenA = await this.getTokenA();
         let tokenAAmount: string;
         let minTokenAOut: string;

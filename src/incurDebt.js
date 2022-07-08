@@ -16,14 +16,13 @@ const addresses_1 = require("./metadata/addresses");
 const Balancer_1 = require("./strategies/Balancer");
 const Curve_1 = require("./strategies/Curve");
 const Uniswap_1 = require("./strategies/Uniswap");
-const utils_1 = require("ethers/lib/utils");
 class IncurDebt {
     constructor(context) {
         this._context = context;
         this._strategies = addresses_1.StrategyAddresses;
         this.contract = new ethers_1.Contract((0, addresses_1.IncurDebtAddress)(context.chainId), IncurDebt.abi, context.provider);
     }
-    encodeBorrowParameters(sender, strategy, lpAddress, slippage = 0.01, ohmAmount, otherTokens = [], otherTokenAmounts = []) {
+    getAddLiquidityTx(sender, strategy, lpAddress, slippage = 0.01, ohmAmount, otherTokens = [], otherTokenAmounts = []) {
         return __awaiter(this, void 0, void 0, function* () {
             const provider = this._context.provider;
             const strategies = this._strategies;
@@ -38,8 +37,7 @@ class IncurDebt {
                 strategyInstance = new Balancer_1.Balancer(sender, lpAddress, otherTokens, otherTokenAmounts, slippage, ohmAmount, provider);
             else
                 strategyInstance = new Curve_1.Curve(lpAddress, slippage, ohmAmount, provider);
-            const encodedParams = yield strategyInstance.getEncodedParams();
-            const decodedParams = utils_1.defaultAbiCoder.decode(["address", "address", "uint256", "uint256", "uint256", "uint256"], encodedParams);
+            const encodedParams = yield strategyInstance.getAddLiquidityCalldata();
             tx = yield this.contract.populateTransaction.createLP(ohmAmount, strategies[strategy], encodedParams);
             return tx;
         });

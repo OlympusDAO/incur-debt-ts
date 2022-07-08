@@ -84,7 +84,7 @@ class Uniswap {
             return adjustedReservesA.mul("1000").div(reservesB).toString();
         });
     }
-    getEncodedParams() {
+    getAddLiquidityCalldata() {
         return __awaiter(this, void 0, void 0, function* () {
             const tokenA = yield this.getTokenA();
             let tokenAAmount;
