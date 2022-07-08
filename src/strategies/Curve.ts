@@ -1,4 +1,4 @@
-import { StrategyInterface } from "../interfaces/strategy";
+import { StrategyInterface } from "../types";
 import { BigNumber, Contract, providers } from "ethers";
 import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
 import { ERC20ABI, StableSwapABI } from "../metadata/abis";

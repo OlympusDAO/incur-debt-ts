@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CurvePoolABI = exports.BalancerHelperABI = exports.BalancerVaultsABI = exports.UniV2PoolABI = exports.ERC20ABI = exports.BalancerVaultABI = exports.BalancerHelpersABI = exports.JoinPoolRequest = exports.UniswapV2ABI = exports.StableSwapABI = exports.IncurDebtABI = void 0;
+exports.CurvePoolABI = exports.BalancerHelperABI = exports.BalancerVaultsABI = exports.UniV2PoolABI = exports.ERC20ABI = exports.BalancerVaultABI = exports.BalancerHelpersABI = exports.JoinPoolRequest = exports.UniswapV2ABI = exports.StableSwapABI = exports.IncurDebtABI = exports.BorrowerData = void 0;
+exports.BorrowerData = [
+    "tuple(uint128 debt, uint128 limit, uint128 collateralInGOHM, uint128 wrappedGOHM, bool isNonLpBorrower, bool isLpBorrower)",
+];
 exports.IncurDebtABI = [
     "function deposit(uint256)",
     "function borrow(uint256)",
@@ -12,6 +15,9 @@ exports.IncurDebtABI = [
     "function repayDebtWithCollateralAndWithdrawTheRest()",
     "function repayDebtWithOHM(uint256 _ohmAmount)",
     "function getAvailableToBorrow() view returns (uint256)",
+    "function totalOutstandingGlobalDebt() view returns (uint256)",
+    "function lpTokenOwnership(address, address) view returns (uint256)",
+    `function borrowers(address) view returns (${exports.BorrowerData})`,
 ];
 exports.StableSwapABI = [
     "function coins(uint256) view returns (address)",

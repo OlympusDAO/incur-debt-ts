@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Balancer = void 0;
 const ethers_1 = require("ethers");
@@ -27,44 +18,38 @@ class Balancer {
         this.assetAmounts = tokenAmounts.sort(); // This does not work because the amounts need to be sorted based on address order, not alphabetical order of the amounts
         this.acceptableSlippage = (1 - slippage) * 1000;
     }
-    getPoolTokens() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.vault || !this.pool)
-                throw new Error("Vault and liquidity pool not initialized");
-            const { tokens, balances, lastTimestamp } = yield this.vault.getPoolTokens(this.pool);
-            return tokens;
-        });
+    async getPoolTokens() {
+        if (!this.vault || !this.pool)
+            throw new Error("Vault and liquidity pool not initialized");
+        const { tokens, balances, lastTimestamp } = await this.vault.getPoolTokens(this.pool);
+        return tokens;
     }
-    verifyOtherTokens() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.vault || !this.pool)
-                throw new Error("Vault and liquidity pool not initialized");
-            const poolTokens = yield this.getPoolTokens();
-            for (let i = 0; i < this.assets.length; i++) {
-                if (!poolTokens.includes(this.assetAmounts[i]))
-                    return false;
-            }
-            return true;
-        });
+    async verifyOtherTokens() {
+        if (!this.vault || !this.pool)
+            throw new Error("Vault and liquidity pool not initialized");
+        const poolTokens = await this.getPoolTokens();
+        for (let i = 0; i < this.assets.length; i++) {
+            if (!poolTokens.includes(this.assetAmounts[i]))
+                return false;
+        }
+        return true;
     }
-    getAddLiquidityCalldata() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!this.verifyOtherTokens())
-                throw new Error("Passed tokens do not match the pool.");
-            const userData = utils_1.defaultAbiCoder.encode(["enum", "uint256", "uint256"], [1, this.assetAmounts, 0]);
-            const joinPoolRequest = {
-                assets: this.assets,
-                maxAmountsIn: this.assetAmounts,
-                userData: userData,
-                fromInternalBalance: false,
-            };
-            const expectedPoolTokensOut = yield this.balancerHelpers.callStatic.queryJoin(this.pool, addresses_1.IncurDebtAddress, this.msgSender, joinPoolRequest);
-            const minPoolTokensOut = ethers_1.BigNumber.from(expectedPoolTokensOut)
-                .mul(this.acceptableSlippage)
-                .div("1000");
-            const encodedParams = utils_1.defaultAbiCoder.encode(["bytes", "address[]", "uint256[]", "uint256"], [this.pool, this.assets, this.assetAmounts, minPoolTokensOut]);
-            return encodedParams;
-        });
+    async getAddLiquidityCalldata() {
+        if (!this.verifyOtherTokens())
+            throw new Error("Passed tokens do not match the pool.");
+        const userData = utils_1.defaultAbiCoder.encode(["enum", "uint256", "uint256"], [1, this.assetAmounts, 0]);
+        const joinPoolRequest = {
+            assets: this.assets,
+            maxAmountsIn: this.assetAmounts,
+            userData: userData,
+            fromInternalBalance: false,
+        };
+        const expectedPoolTokensOut = await this.balancerHelpers.callStatic.queryJoin(this.pool, addresses_1.IncurDebtAddress, this.msgSender, joinPoolRequest);
+        const minPoolTokensOut = ethers_1.BigNumber.from(expectedPoolTokensOut)
+            .mul(this.acceptableSlippage)
+            .div("1000");
+        const encodedParams = utils_1.defaultAbiCoder.encode(["bytes", "address[]", "uint256[]", "uint256"], [this.pool, this.assets, this.assetAmounts, minPoolTokensOut]);
+        return encodedParams;
     }
 }
 exports.Balancer = Balancer;

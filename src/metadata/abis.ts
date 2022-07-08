@@ -1,3 +1,7 @@
+export const BorrowerData = [
+    "tuple(uint128 debt, uint128 limit, uint128 collateralInGOHM, uint128 wrappedGOHM, bool isNonLpBorrower, bool isLpBorrower)",
+];
+
 export const IncurDebtABI = [
     "function deposit(uint256)",
     "function borrow(uint256)",
@@ -9,6 +13,9 @@ export const IncurDebtABI = [
     "function repayDebtWithCollateralAndWithdrawTheRest()",
     "function repayDebtWithOHM(uint256 _ohmAmount)",
     "function getAvailableToBorrow() view returns (uint256)",
+    "function totalOutstandingGlobalDebt() view returns (uint256)",
+    "function lpTokenOwnership(address, address) view returns (uint256)",
+    `function borrowers(address) view returns (${BorrowerData})`,
 ];
 
 export const StableSwapABI = [
