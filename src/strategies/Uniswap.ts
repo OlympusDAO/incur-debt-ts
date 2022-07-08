@@ -95,12 +95,11 @@ export class Uniswap implements StrategyInterface {
         const isTokenAMorePrecise =
             BigNumber.from(tokenADecimals).gt(tokenBDecimals);
 
-        if (isPrecisionEqual) {
+        if (isPrecisionEqual)
             return BigNumber.from(reservesA)
                 .mul("1000")
                 .div(reservesB)
                 .toString();
-        }
 
         if (isTokenAMorePrecise) {
             const decimalAdjustment = BigNumber.from("10").pow(

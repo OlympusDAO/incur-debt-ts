@@ -66,12 +66,11 @@ class Uniswap {
             const tokenBDecimals = yield this.getTokenBDecimals();
             const isPrecisionEqual = ethers_1.BigNumber.from(tokenADecimals).eq(tokenBDecimals);
             const isTokenAMorePrecise = ethers_1.BigNumber.from(tokenADecimals).gt(tokenBDecimals);
-            if (isPrecisionEqual) {
+            if (isPrecisionEqual)
                 return ethers_1.BigNumber.from(reservesA)
                     .mul("1000")
                     .div(reservesB)
                     .toString();
-            }
             if (isTokenAMorePrecise) {
                 const decimalAdjustment = ethers_1.BigNumber.from("10").pow(ethers_1.BigNumber.from(tokenADecimals).sub(tokenBDecimals));
                 const adjustedReservesB = decimalAdjustment.mul(reservesB);
