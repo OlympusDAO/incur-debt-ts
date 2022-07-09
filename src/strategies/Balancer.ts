@@ -1,11 +1,12 @@
-import { StrategyInterface } from "../interfaces/strategy";
-import { Contract, providers } from "ethers";
+import { StrategyInterface } from "../types";
+import { BigNumber, Contract, providers } from "ethers";
 import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
 import { BalancerHelpersABI, BalancerVaultABI } from "../metadata/abis";
 import {
     BalancerHelperAddress,
     BalancerVaultAddress,
     IncurDebtAddress,
+    OhmAddress,
 } from "../metadata/addresses";
 
 type JsonRpcProvider = providers.JsonRpcProvider;
@@ -21,9 +22,9 @@ export class Balancer implements StrategyInterface {
 
     private pool: string;
 
-    private otherTokens: string[];
+    private assets: string[];
 
-    private otherTokenAmounts: string[];
+    private assetAmounts: string[];
 
     private acceptableSlippage: number;
 
@@ -50,13 +51,17 @@ export class Balancer implements StrategyInterface {
 
         this.pool = poolId;
 
-        this.otherTokens = tokens;
-
-        this.otherTokenAmounts = tokenAmounts;
-
-        this.acceptableSlippage = 1 - slippage;
-
         this.ohmToBorrow = ohmAmount;
+
+        tokens.push(OhmAddress);
+
+        this.assets = tokens.sort(); // Not sure if this works because they're addresses that according to Balancer need to be sorted numerically
+
+        tokenAmounts.push(this.ohmToBorrow);
+
+        this.assetAmounts = tokenAmounts.sort(); // This does not work because the amounts need to be sorted based on address order, not alphabetical order of the amounts
+
+        this.acceptableSlippage = (1 - slippage) * 1000;
     }
 
     async getPoolTokens(): Promise<string[]> {
@@ -74,30 +79,30 @@ export class Balancer implements StrategyInterface {
 
         const poolTokens = await this.getPoolTokens();
 
-        for (let i = 0; i < this.otherTokens.length; i++) {
-            if (!poolTokens.includes(this.otherTokens[i])) return false;
+        for (let i = 0; i < this.assets.length; i++) {
+            if (!poolTokens.includes(this.assetAmounts[i])) return false;
         }
 
         return true;
     }
 
-    async getEncodedParams(): Promise<string> {
+    async getAddLiquidityCalldata(): Promise<string> {
         if (!this.verifyOtherTokens())
             throw new Error("Passed tokens do not match the pool.");
 
         const userData = abiCoder.encode(
             ["enum", "uint256", "uint256"],
-            [1, this.otherTokenAmounts, 0]
+            [1, this.assetAmounts, 0]
         );
 
         const joinPoolRequest = {
-            assets: this.otherTokens,
-            maxAmountsIn: this.otherTokenAmounts,
+            assets: this.assets,
+            maxAmountsIn: this.assetAmounts,
             userData: userData,
             fromInternalBalance: false,
         };
 
-        const minPoolTokensOut =
+        const expectedPoolTokensOut =
             await this.balancerHelpers.callStatic.queryJoin(
                 this.pool,
                 IncurDebtAddress,
@@ -105,14 +110,13 @@ export class Balancer implements StrategyInterface {
                 joinPoolRequest
             );
 
+        const minPoolTokensOut = BigNumber.from(expectedPoolTokensOut)
+            .mul(this.acceptableSlippage)
+            .div("1000");
+
         const encodedParams = abiCoder.encode(
             ["bytes", "address[]", "uint256[]", "uint256"],
-            [
-                this.pool,
-                this.otherTokens,
-                this.otherTokenAmounts,
-                minPoolTokensOut,
-            ]
+            [this.pool, this.assets, this.assetAmounts, minPoolTokensOut]
         );
 
         return encodedParams;

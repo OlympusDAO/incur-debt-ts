@@ -1,4 +1,7 @@
-export const IncurDebtAddress = "0x544f54c5F38D6D6b96331f7E75CB202B5ea72eca";
+export const IncurDebtAddress = (chainId: number) => {
+    if (chainId == 1) return "0x544f54c5F38D6D6b96331f7E75CB202B5ea72eca";
+    if (chainId == 5) return "0x5Fd05A2f73C3cC77a1d2CdEEae4C0B0149E30b94";
+};
 
 export const OhmAddress = "0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5";
 

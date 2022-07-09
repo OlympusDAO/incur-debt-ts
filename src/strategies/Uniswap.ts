@@ -1,4 +1,4 @@
-import { StrategyInterface } from "../interfaces/strategy";
+import { StrategyInterface } from "../types";
 import { BigNumber, Contract, providers } from "ethers";
 import { defaultAbiCoder as abiCoder } from "ethers/lib/utils";
 import { ERC20ABI, UniswapV2ABI } from "../metadata/abis";
@@ -24,10 +24,14 @@ export class Uniswap implements StrategyInterface {
         provider: JsonRpcProvider
     ) {
         this.provider = provider;
-        
-        this.liquidityPool = new Contract(lpAddress, Uniswap.abi, this.provider);
 
-        this.acceptableSlippage = (1 - slippage) * 100;
+        this.liquidityPool = new Contract(
+            lpAddress,
+            Uniswap.abi,
+            this.provider
+        );
+
+        this.acceptableSlippage = (1 - slippage) * 1000;
 
         this.ohmToBorrow = ohmAmount;
     }
@@ -43,7 +47,11 @@ export class Uniswap implements StrategyInterface {
             throw new Error("Liquidity pool not initialized");
 
         const tokenAAddress = await this.getTokenA();
-        const tokenAContract = new Contract(tokenAAddress, ERC20ABI, this.provider);
+        const tokenAContract = new Contract(
+            tokenAAddress,
+            ERC20ABI,
+            this.provider
+        );
         const tokenADecimals = await tokenAContract.decimals();
 
         return tokenADecimals;
@@ -60,7 +68,11 @@ export class Uniswap implements StrategyInterface {
             throw new Error("Liquidity pool not initialized");
 
         const tokenBAddress = await this.getTokenB();
-        const tokenBContract = new Contract(tokenBAddress, ERC20ABI, this.provider);
+        const tokenBContract = new Contract(
+            tokenBAddress,
+            ERC20ABI,
+            this.provider
+        );
         const tokenBDecimals = await tokenBContract.decimals();
 
         return tokenBDecimals;
@@ -78,24 +90,36 @@ export class Uniswap implements StrategyInterface {
         const reservesB = reservesInfo[1];
         const tokenBDecimals = await this.getTokenBDecimals();
 
-        const isPrecisionEqual = BigNumber.from(tokenADecimals).eq(tokenBDecimals);
-        const isTokenAMorePrecise = BigNumber.from(tokenADecimals).gt(tokenBDecimals);
+        const isPrecisionEqual =
+            BigNumber.from(tokenADecimals).eq(tokenBDecimals);
+        const isTokenAMorePrecise =
+            BigNumber.from(tokenADecimals).gt(tokenBDecimals);
 
         if (isPrecisionEqual)
-            return BigNumber.from(reservesA).div(reservesB).mul("100").toString();
+            return BigNumber.from(reservesA)
+                .mul("1000")
+                .div(reservesB)
+                .toString();
 
         if (isTokenAMorePrecise) {
-            const decimalAdjustment = BigNumber.from(tokenADecimals).div(tokenBDecimals);
+            const decimalAdjustment = BigNumber.from("10").pow(
+                BigNumber.from(tokenADecimals).sub(tokenBDecimals)
+            );
             const adjustedReservesB = decimalAdjustment.mul(reservesB);
-            return BigNumber.from(reservesA).div(adjustedReservesB).mul("100").toString();
+            return BigNumber.from(reservesA)
+                .mul("1000")
+                .div(adjustedReservesB)
+                .toString();
         }
 
-        const decimalAdjustment = BigNumber.from(tokenBDecimals).div(tokenADecimals);
+        const decimalAdjustment = BigNumber.from("10").pow(
+            BigNumber.from(tokenBDecimals).sub(tokenADecimals)
+        );
         const adjustedReservesA = decimalAdjustment.mul(reservesA);
-        return adjustedReservesA.div(reservesB).mul("100").toString();
+        return adjustedReservesA.mul("1000").div(reservesB).toString();
     }
 
-    async getEncodedParams(): Promise<string> {
+    async getAddLiquidityCalldata(): Promise<string> {
         const tokenA = await this.getTokenA();
         let tokenAAmount: string;
         let minTokenAOut: string;
@@ -104,37 +128,76 @@ export class Uniswap implements StrategyInterface {
         let tokenBAmount: string;
         let minTokenBOut: string;
 
+        let ohmDecimals: string;
+        let otherDecimals: string;
+
         const reserveRatio = await this.getReserveRatio();
 
         if (tokenA == OhmAddress) {
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
-                .div("100")
+                .div("1000")
                 .toString();
+            ohmDecimals = await this.getTokenADecimals();
+            otherDecimals = await this.getTokenBDecimals();
+            const decimalDiff = BigNumber.from(otherDecimals).sub(ohmDecimals);
 
-            tokenBAmount = BigNumber.from(tokenAAmount)
-                .mul("100")
-                .div(reserveRatio)
-                .toString();
+            if (decimalDiff.gt("0")) {
+                tokenBAmount = BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .mul(BigNumber.from("10").pow(decimalDiff))
+                    .div(reserveRatio)
+                    .toString();
+            } else if (decimalDiff.lt("0")) {
+                tokenBAmount = BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .div(reserveRatio)
+                    .div(BigNumber.from("10").pow(decimalDiff.abs()))
+                    .toString();
+            } else {
+                tokenBAmount = BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .div(reserveRatio)
+                    .toString();
+            }
+
             minTokenBOut = BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
-                .div("100")
+                .div("1000")
                 .toString();
         } else {
             tokenBAmount = this.ohmToBorrow;
             minTokenBOut = BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
-                .div("100")
+                .div("1000")
                 .toString();
+            ohmDecimals = await this.getTokenBDecimals();
+            otherDecimals = await this.getTokenBDecimals();
+            const decimalDiff = BigNumber.from(otherDecimals).sub(ohmDecimals);
 
-            tokenAAmount = BigNumber.from(tokenBAmount)
-                .mul(reserveRatio)
-                .div("100")
-                .toString();
+            if (decimalDiff.gt("0")) {
+                tokenAAmount = BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .mul(BigNumber.from("10").pow(decimalDiff))
+                    .div("1000")
+                    .toString();
+            } else if (decimalDiff.lt("0")) {
+                tokenAAmount = BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .div(BigNumber.from("10").pow(decimalDiff.abs()))
+                    .div("1000")
+                    .toString();
+            } else {
+                tokenAAmount = BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .div("1000")
+                    .toString();
+            }
+
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
-                .div("100")
+                .div("1000")
                 .toString();
         }
 

@@ -1,4 +1,4 @@
-import { StrategyInterface } from "./interfaces/strategy";
+import { BorrowerData, StrategyInterface } from "./types";
 import { Contract, providers, UnsignedTransaction } from "ethers";
 import { IncurDebtABI } from "./metadata/abis";
 import { IncurDebtAddress, StrategyAddresses } from "./metadata/addresses";
@@ -22,13 +22,13 @@ export class IncurDebt {
         this._context = context;
         this._strategies = StrategyAddresses;
         this.contract = new Contract(
-            IncurDebtAddress,
+            IncurDebtAddress(context.chainId)!,
             IncurDebt.abi,
             context.provider
         );
     }
 
-    async encodeBorrowParameters(
+    async getAddLiquidityTx(
         sender: string,
         strategy: string,
         lpAddress: string,
@@ -76,7 +76,7 @@ export class IncurDebt {
                 provider
             );
 
-        const encodedParams = strategyInstance.getEncodedParams();
+        const encodedParams = await strategyInstance.getAddLiquidityCalldata();
 
         tx = await this.contract.populateTransaction.createLP(
             ohmAmount,
@@ -85,5 +85,32 @@ export class IncurDebt {
         );
 
         return tx;
+    }
+
+    async getBorrowerData(borrower: string): Promise<BorrowerData> {
+        const result: Array<any> = await this.contract.borrowers(borrower);
+        return {
+            debt: result[0],
+            limit: result[1],
+            collateralInGOHM: result[2],
+            unwrappedGOHM: result[3],
+            isNonLpBorrower: result[4],
+            isLpBorrower: result[5],
+        };
+    }
+
+    async balanceOfLpToken(
+        accountAddress: string,
+        lpAddress: string
+    ): Promise<number> {
+        return await this.contract.lpTokenOwnership(lpAddress, accountAddress);
+    }
+
+    async getBorrowable(): Promise<number> {
+        return await this.contract.getAvailableToBorrow();
+    }
+
+    async getTotalOutstandingDebt(): Promise<number> {
+        return await this.contract.totalOutstandingGlobalDebt();
     }
 }

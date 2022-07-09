@@ -3,3 +3,4 @@
 
 yarn format:fix
 yarn run tsc
+git add .
