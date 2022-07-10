@@ -6,6 +6,9 @@
   "author": "PARABRAHMAN0 <iamgooooooogling@gmail.com>",
   "license": "MIT",
   "private": true,
+  "bin": {
+    "incur-debt": "src/cli.js"
+  },
   "scripts": {
     "lint": "eslint \"**/*.ts\"",
     "lint:fix": "eslint --fix \"**/*.ts\"",
