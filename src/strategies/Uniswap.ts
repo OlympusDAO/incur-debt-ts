@@ -133,7 +133,8 @@ export class Uniswap implements StrategyInterface {
 
         const reserveRatio = await this.getReserveRatio();
 
-        if (tokenA == OhmAddress) {
+        if (tokenA.toLowerCase() == OhmAddress.toLowerCase()) {
+            console.log("1");
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
@@ -142,6 +143,7 @@ export class Uniswap implements StrategyInterface {
             ohmDecimals = await this.getTokenADecimals();
             otherDecimals = await this.getTokenBDecimals();
             const decimalDiff = BigNumber.from(otherDecimals).sub(ohmDecimals);
+            console.log(tokenAAmount);
 
             if (decimalDiff.gt("0")) {
                 tokenBAmount = BigNumber.from(tokenAAmount)
@@ -167,6 +169,7 @@ export class Uniswap implements StrategyInterface {
                 .div("1000")
                 .toString();
         } else {
+            console.log("2");
             tokenBAmount = this.ohmToBorrow;
             minTokenBOut = BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
@@ -175,6 +178,7 @@ export class Uniswap implements StrategyInterface {
             ohmDecimals = await this.getTokenBDecimals();
             otherDecimals = await this.getTokenBDecimals();
             const decimalDiff = BigNumber.from(otherDecimals).sub(ohmDecimals);
+            console.log(tokenBAmount);
 
             if (decimalDiff.gt("0")) {
                 tokenAAmount = BigNumber.from(tokenBAmount)
@@ -201,6 +205,10 @@ export class Uniswap implements StrategyInterface {
                 .toString();
         }
 
+        console.log(tokenA);
+        console.log(tokenB);
+        console.log(tokenAAmount);
+        console.log(tokenBAmount);
         const encodedParams = abiCoder.encode(
             ["address", "address", "uint256", "uint256", "uint256", "uint256"],
             [

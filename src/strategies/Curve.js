@@ -77,7 +77,7 @@ class Curve {
         let tokenBAmount;
         let otherToken;
         const reserveRatio = await this.getReserveRatio();
-        if (tokenA == addresses_1.OhmAddress) {
+        if (tokenA.toLowerCase() == addresses_1.OhmAddress.toLowerCase()) {
             tokenAAmount = this.ohmToBorrow;
             tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
                 .mul("1000")
