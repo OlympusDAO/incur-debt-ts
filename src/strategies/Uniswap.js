@@ -75,7 +75,7 @@ class Uniswap {
         let ohmDecimals;
         let otherDecimals;
         const reserveRatio = await this.getReserveRatio();
-        if (tokenA == addresses_1.OhmAddress) {
+        if (tokenA.toLowerCase() == addresses_1.OhmAddress.toLowerCase()) {
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = ethers_1.BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)

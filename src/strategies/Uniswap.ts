@@ -133,7 +133,7 @@ export class Uniswap implements StrategyInterface {
 
         const reserveRatio = await this.getReserveRatio();
 
-        if (tokenA == OhmAddress) {
+        if (tokenA.toLowerCase() == OhmAddress.toLowerCase()) {
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)

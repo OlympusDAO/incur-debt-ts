@@ -130,7 +130,7 @@ export class Curve implements StrategyInterface {
 
         const reserveRatio = await this.getReserveRatio();
 
-        if (tokenA == OhmAddress) {
+        if (tokenA.toLowerCase() == OhmAddress.toLowerCase()) {
             tokenAAmount = this.ohmToBorrow;
             tokenBAmount = BigNumber.from(tokenAAmount)
                 .mul("1000")

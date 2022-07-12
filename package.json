@@ -1,11 +1,14 @@
 {
   "name": "incur-debt-ts",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "src/index.ts",
   "repository": "https://github.com/OlympusDAO/incur-debt-ts.git",
   "author": "PARABRAHMAN0 <iamgooooooogling@gmail.com>",
   "license": "MIT",
   "private": true,
+  "bin": {
+    "incur-debt": "src/cli.js"
+  },
   "scripts": {
     "lint": "eslint \"**/*.ts\"",
     "lint:fix": "eslint --fix \"**/*.ts\"",
