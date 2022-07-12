@@ -10,7 +10,7 @@ or
 
 ### Use
 
-In the interactions folder create a JSON file with the following information:
+Create a JSON file with the following information:
 
 - Chain ID (Should always be 1 unless you are whitelisted for testing on Goerli)
 - RPC Url (i.e. "https://goerli.infura.io/v3/00000000000000000000000000000000" but with your Infura or Alchemy key)
@@ -23,9 +23,9 @@ In the interactions folder create a JSON file with the following information:
 - If you are using Balancer as your DEX, an array of the other tokens you wish to deposit to the pool
 - If you are using Balancer as your DEX, an array of the amounts of the previously specified other tokens you wish to deposit to the pool
 
-An example for a OHM-DAI Sushiswap pool on Goerli can be found in `examples/goerli/goerliSushiParams.json`
+An example for a OHM-DAI Sushiswap pool on Goerli can be found in `examples/goerli/goerliSushiParams.json` on Github
 
-To build the calldata for adding liquidity, run `npx incur-debt add-liq interactions/file.json` in the command line
+To build the calldata for adding liquidity, start a command line or terminal instance in the directory where your JSON file exists and run `npx incur-debt add-liq file.json` in the command line
 
 ### Current Status
 
