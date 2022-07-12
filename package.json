@@ -1,5 +1,5 @@
 {
-  "name": "incur-debt-ts",
+  "name": "incur-debt",
   "version": "1.0.0",
   "main": "src/index.ts",
   "repository": "https://github.com/OlympusDAO/incur-debt-ts.git",
