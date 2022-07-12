@@ -5,7 +5,6 @@
   "repository": "https://github.com/OlympusDAO/incur-debt-ts.git",
   "author": "PARABRAHMAN0 <iamgooooooogling@gmail.com>",
   "license": "MIT",
-  "private": true,
   "bin": {
     "incur-debt": "src/cli.js"
   },
