@@ -76,7 +76,6 @@ class Uniswap {
         let otherDecimals;
         const reserveRatio = await this.getReserveRatio();
         if (tokenA.toLowerCase() == addresses_1.OhmAddress.toLowerCase()) {
-            console.log("1");
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = ethers_1.BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)
@@ -85,7 +84,6 @@ class Uniswap {
             ohmDecimals = await this.getTokenADecimals();
             otherDecimals = await this.getTokenBDecimals();
             const decimalDiff = ethers_1.BigNumber.from(otherDecimals).sub(ohmDecimals);
-            console.log(tokenAAmount);
             if (decimalDiff.gt("0")) {
                 tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
                     .mul("1000")
@@ -112,7 +110,6 @@ class Uniswap {
                 .toString();
         }
         else {
-            console.log("2");
             tokenBAmount = this.ohmToBorrow;
             minTokenBOut = ethers_1.BigNumber.from(tokenBAmount)
                 .mul(this.acceptableSlippage)
@@ -121,7 +118,6 @@ class Uniswap {
             ohmDecimals = await this.getTokenBDecimals();
             otherDecimals = await this.getTokenBDecimals();
             const decimalDiff = ethers_1.BigNumber.from(otherDecimals).sub(ohmDecimals);
-            console.log(tokenBAmount);
             if (decimalDiff.gt("0")) {
                 tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
                     .mul(reserveRatio)
@@ -147,10 +143,6 @@ class Uniswap {
                 .div("1000")
                 .toString();
         }
-        console.log(tokenA);
-        console.log(tokenB);
-        console.log(tokenAAmount);
-        console.log(tokenBAmount);
         const encodedParams = utils_1.defaultAbiCoder.encode(["address", "address", "uint256", "uint256", "uint256", "uint256"], [
             tokenA,
             tokenB,
