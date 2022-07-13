@@ -37,7 +37,8 @@ export class Balancer implements StrategyInterface {
         tokenAmounts: string[],
         slippage: number = 0.01,
         ohmAmount: string,
-        provider: JsonRpcProvider
+        provider: JsonRpcProvider,
+        chainId: number
     ) {
         this.msgSender = sender;
 
@@ -53,7 +54,7 @@ export class Balancer implements StrategyInterface {
 
         this.ohmToBorrow = ohmAmount;
 
-        tokens.push(OhmAddress);
+        tokens.push(OhmAddress(chainId)!);
 
         this.assets = tokens.sort(); // Not sure if this works because they're addresses that according to Balancer need to be sorted numerically
 

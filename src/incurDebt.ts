@@ -20,7 +20,7 @@ export class IncurDebt {
 
     constructor(context: Context) {
         this._context = context;
-        this._strategies = StrategyAddresses;
+        this._strategies = StrategyAddresses(context.chainId)!;
         this.contract = new Contract(
             IncurDebtAddress(context.chainId)!,
             IncurDebt.abi,
@@ -56,7 +56,8 @@ export class IncurDebt {
                 lpAddress,
                 slippage,
                 ohmAmount,
-                provider
+                provider,
+                this._context.chainId
             );
         else if (strategy == "balancer")
             strategyInstance = new Balancer(
@@ -66,14 +67,16 @@ export class IncurDebt {
                 otherTokenAmounts,
                 slippage,
                 ohmAmount,
-                provider
+                provider,
+                this._context.chainId
             );
         else
             strategyInstance = new Curve(
                 lpAddress,
                 slippage,
                 ohmAmount,
-                provider
+                provider,
+                this._context.chainId
             );
 
         const encodedParams = await strategyInstance.getAddLiquidityCalldata();
