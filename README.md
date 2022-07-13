@@ -23,6 +23,21 @@ Create a JSON file with the following information:
 - If you are using Balancer as your DEX, an array of the other tokens you wish to deposit to the pool
 - If you are using Balancer as your DEX, an array of the amounts of the previously specified other tokens you wish to deposit to the pool
 
+Template:
+```js
+{
+    "chainId": 0,
+    "rpcUrl": "https://goerli.infura.io/v3/00000000000000000000000000000000",
+    "sender": "0x0000000000000000000000000000000000000000",
+    "strategy": "uniswap",
+    "lpAddress": "0x0000000000000000000000000000000000000000",
+    "slippage": 0.01,
+    "ohmAmount": "0",
+    "otherTokens": ["0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000"],
+    "otherTokenAmounts": ["100000000", "100000000000000000"]
+}
+```
+
 An example for a OHM-DAI Sushiswap pool on Goerli can be found in `examples/goerli/goerliSushiParams.json` on Github
 
 To build the calldata for adding liquidity, start a command line or terminal instance in the directory where your JSON file exists and run `npx incur-debt add-liq file.json` in the command line
