@@ -17,11 +17,14 @@ export class Curve implements StrategyInterface {
 
     private provider: JsonRpcProvider;
 
+    private ohmAddress: string;
+
     constructor(
         lpAddress: string,
         slippage: number = 0.01,
         ohmAmount: string,
-        provider: JsonRpcProvider
+        provider: JsonRpcProvider,
+        chainId: number
     ) {
         this.provider = provider;
 
@@ -30,6 +33,8 @@ export class Curve implements StrategyInterface {
         this.acceptableSlippage = (1 - slippage) * 1000;
 
         this.ohmToBorrow = ohmAmount;
+
+        this.ohmAddress = OhmAddress(chainId)!;
     }
 
     async getTokenA(): Promise<string> {
@@ -130,7 +135,7 @@ export class Curve implements StrategyInterface {
 
         const reserveRatio = await this.getReserveRatio();
 
-        if (tokenA.toLowerCase() == OhmAddress.toLowerCase()) {
+        if (tokenA.toLowerCase() == this.ohmAddress.toLowerCase()) {
             tokenAAmount = this.ohmToBorrow;
             tokenBAmount = BigNumber.from(tokenAAmount)
                 .mul("1000")

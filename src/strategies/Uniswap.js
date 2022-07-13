@@ -6,11 +6,12 @@ const utils_1 = require("ethers/lib/utils");
 const abis_1 = require("../metadata/abis");
 const addresses_1 = require("../metadata/addresses");
 class Uniswap {
-    constructor(lpAddress, slippage = 0.01, ohmAmount, provider) {
+    constructor(lpAddress, slippage = 0.01, ohmAmount, provider, chainId) {
         this.provider = provider;
         this.liquidityPool = new ethers_1.Contract(lpAddress, Uniswap.abi, this.provider);
         this.acceptableSlippage = (1 - slippage) * 1000;
         this.ohmToBorrow = ohmAmount;
+        this.ohmAddress = (0, addresses_1.OhmAddress)(chainId);
     }
     async getTokenA() {
         if (!this.liquidityPool)
@@ -75,7 +76,7 @@ class Uniswap {
         let ohmDecimals;
         let otherDecimals;
         const reserveRatio = await this.getReserveRatio();
-        if (tokenA.toLowerCase() == addresses_1.OhmAddress.toLowerCase()) {
+        if (tokenA.toLowerCase() == this.ohmAddress.toLowerCase()) {
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = ethers_1.BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)

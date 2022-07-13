@@ -15,13 +15,16 @@ export class Uniswap implements StrategyInterface {
 
     private ohmToBorrow: string;
 
+    private ohmAddress: string;
+
     private provider: JsonRpcProvider;
 
     constructor(
         lpAddress: string,
         slippage: number = 0.01,
         ohmAmount: string,
-        provider: JsonRpcProvider
+        provider: JsonRpcProvider,
+        chainId: number
     ) {
         this.provider = provider;
 
@@ -34,6 +37,8 @@ export class Uniswap implements StrategyInterface {
         this.acceptableSlippage = (1 - slippage) * 1000;
 
         this.ohmToBorrow = ohmAmount;
+
+        this.ohmAddress = OhmAddress(chainId)!;
     }
 
     async getTokenA(): Promise<string> {
@@ -133,7 +138,7 @@ export class Uniswap implements StrategyInterface {
 
         const reserveRatio = await this.getReserveRatio();
 
-        if (tokenA.toLowerCase() == OhmAddress.toLowerCase()) {
+        if (tokenA.toLowerCase() == this.ohmAddress.toLowerCase()) {
             tokenAAmount = this.ohmToBorrow;
             minTokenAOut = BigNumber.from(tokenAAmount)
                 .mul(this.acceptableSlippage)

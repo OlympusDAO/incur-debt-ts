@@ -6,13 +6,13 @@ const utils_1 = require("ethers/lib/utils");
 const abis_1 = require("../metadata/abis");
 const addresses_1 = require("../metadata/addresses");
 class Balancer {
-    constructor(sender, poolId, tokens, tokenAmounts, slippage = 0.01, ohmAmount, provider) {
+    constructor(sender, poolId, tokens, tokenAmounts, slippage = 0.01, ohmAmount, provider, chainId) {
         this.msgSender = sender;
         this.vault = new ethers_1.Contract(addresses_1.BalancerVaultAddress, Balancer.abi, provider);
         this.balancerHelpers = new ethers_1.Contract(addresses_1.BalancerHelperAddress, abis_1.BalancerHelpersABI, provider);
         this.pool = poolId;
         this.ohmToBorrow = ohmAmount;
-        tokens.push(addresses_1.OhmAddress);
+        tokens.push((0, addresses_1.OhmAddress)(chainId));
         this.assets = tokens.sort(); // Not sure if this works because they're addresses that according to Balancer need to be sorted numerically
         tokenAmounts.push(this.ohmToBorrow);
         this.assetAmounts = tokenAmounts.sort(); // This does not work because the amounts need to be sorted based on address order, not alphabetical order of the amounts

@@ -10,7 +10,7 @@ const Uniswap_1 = require("./strategies/Uniswap");
 class IncurDebt {
     constructor(context) {
         this._context = context;
-        this._strategies = addresses_1.StrategyAddresses;
+        this._strategies = (0, addresses_1.StrategyAddresses)(context.chainId);
         this.contract = new ethers_1.Contract((0, addresses_1.IncurDebtAddress)(context.chainId), IncurDebt.abi, context.provider);
     }
     async getAddLiquidityTx(sender, strategy, lpAddress, slippage = 0.01, ohmAmount, otherTokens = [], otherTokenAmounts = []) {
@@ -22,11 +22,11 @@ class IncurDebt {
             throw new Error("The only available strategies are Curve, Uniswap, Sushiswap, or Balancer.");
         let strategyInstance;
         if (strategy == "uniswap" || strategy == "sushiswap")
-            strategyInstance = new Uniswap_1.Uniswap(lpAddress, slippage, ohmAmount, provider);
+            strategyInstance = new Uniswap_1.Uniswap(lpAddress, slippage, ohmAmount, provider, this._context.chainId);
         else if (strategy == "balancer")
-            strategyInstance = new Balancer_1.Balancer(sender, lpAddress, otherTokens, otherTokenAmounts, slippage, ohmAmount, provider);
+            strategyInstance = new Balancer_1.Balancer(sender, lpAddress, otherTokens, otherTokenAmounts, slippage, ohmAmount, provider, this._context.chainId);
         else
-            strategyInstance = new Curve_1.Curve(lpAddress, slippage, ohmAmount, provider);
+            strategyInstance = new Curve_1.Curve(lpAddress, slippage, ohmAmount, provider, this._context.chainId);
         const encodedParams = await strategyInstance.getAddLiquidityCalldata();
         tx = await this.contract.populateTransaction.createLP(ohmAmount, strategies[strategy], encodedParams);
         return tx;
