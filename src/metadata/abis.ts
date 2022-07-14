@@ -14,6 +14,7 @@ export const IncurDebtABI = [
     "function repayDebtWithOHM(uint256 _ohmAmount)",
     "function getAvailableToBorrow() view returns (uint256)",
     "function totalOutstandingGlobalDebt() view returns (uint256)",
+    "function globalDebtLimit() view returns (uint256)",
     "function lpTokenOwnership(address, address) view returns (uint256)",
     `function borrowers(address) view returns (${BorrowerData})`,
 ];

@@ -1,5 +1,5 @@
 import { BorrowerData, StrategyInterface } from "./types";
-import { Contract, providers, UnsignedTransaction } from "ethers";
+import { BigNumber, Contract, providers, UnsignedTransaction } from "ethers";
 import { IncurDebtABI } from "./metadata/abis";
 import { IncurDebtAddress, StrategyAddresses } from "./metadata/addresses";
 import { Context } from "./context";
@@ -25,6 +25,18 @@ export class IncurDebt {
             IncurDebtAddress(context.chainId)!,
             IncurDebt.abi,
             context.provider
+        );
+    }
+
+    async getDepositTx(gohmAmount: string): Promise<UnsignedTransaction> {
+        return await this.contract.populateTransaction.deposit(
+            BigNumber.from(gohmAmount)
+        );
+    }
+
+    async getBorrowTx(ohmAmount: string): Promise<UnsignedTransaction> {
+        return await this.contract.populateTransaction.borrow(
+            BigNumber.from(ohmAmount)
         );
     }
 
@@ -90,30 +102,70 @@ export class IncurDebt {
         return tx;
     }
 
+    async getWithdrawLiquidityTx(
+        liquidity: string,
+        lpToken: string
+    ): Promise<UnsignedTransaction> {
+        return await this.contract.populateTransaction.withdrawLP(
+            BigNumber.from(liquidity),
+            lpToken
+        );
+    }
+
+    async getWithdrawTx(gohmAmount: string): Promise<UnsignedTransaction> {
+        return await this.contract.populateTransaction.withdraw(
+            BigNumber.from(gohmAmount)
+        );
+    }
+
+    async getRepayDebtTx(
+        gohmAmount: string,
+        withCollateral: boolean,
+        withdrawRest: boolean
+    ): Promise<UnsignedTransaction> {
+        const populator = this.contract.populateTransaction;
+        if (withCollateral)
+            if (withdrawRest)
+                return await populator.repayDebtWithCollateralAndWithdrawTheRest();
+            else return await populator.repayDebtWithCollateral();
+
+        return await populator.repayDebtWithOHM(BigNumber.from(gohmAmount));
+    }
+
     async getBorrowerData(borrower: string): Promise<BorrowerData> {
         const result: Array<any> = await this.contract.borrowers(borrower);
         return {
-            debt: result[0],
-            limit: result[1],
-            collateralInGOHM: result[2],
-            unwrappedGOHM: result[3],
+            debt: result[0].toString(),
+            limit: result[1].toString(),
+            collateralInGOHM: result[2].toString(),
+            unwrappedGOHM: result[3].toString(),
             isNonLpBorrower: result[4],
             isLpBorrower: result[5],
         };
     }
 
-    async balanceOfLpToken(
+    async getBalanceOfLpToken(
         accountAddress: string,
         lpAddress: string
-    ): Promise<number> {
-        return await this.contract.lpTokenOwnership(lpAddress, accountAddress);
+    ): Promise<string> {
+        return (
+            await this.contract.lpTokenOwnership(lpAddress, accountAddress)
+        ).toString();
     }
 
-    async getBorrowable(): Promise<number> {
-        return await this.contract.getAvailableToBorrow();
+    async getBorrowable(accountAddress: string): Promise<string> {
+        return (
+            await this.contract.callStatic.getAvailableToBorrow({
+                from: accountAddress,
+            })
+        ).toString();
     }
 
-    async getTotalOutstandingDebt(): Promise<number> {
-        return await this.contract.totalOutstandingGlobalDebt();
+    async getGlobalDebtLimit(): Promise<string> {
+        return (await this.contract.globalDebtLimit()).toString();
+    }
+
+    async getTotalOutstandingDebt(): Promise<string> {
+        return (await this.contract.totalOutstandingGlobalDebt()).toString();
     }
 }
