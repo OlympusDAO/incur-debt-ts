@@ -13,9 +13,17 @@ class Balancer {
         this.pool = poolId;
         this.ohmToBorrow = ohmAmount;
         tokens.push((0, addresses_1.OhmAddress)(chainId));
-        this.assets = tokens.sort(); // Not sure if this works because they're addresses that according to Balancer need to be sorted numerically
         tokenAmounts.push(this.ohmToBorrow);
-        this.assetAmounts = tokenAmounts.sort(); // This does not work because the amounts need to be sorted based on address order, not alphabetical order of the amounts
+        this.assetAmounts = tokenAmounts.sort((a, b) => {
+            const indexOfA = tokenAmounts.indexOf(a);
+            const indexOfB = tokenAmounts.indexOf(b);
+            return ethers_1.BigNumber.from(tokens[indexOfA])
+                .sub(tokens[indexOfB])
+                .toNumber();
+        });
+        this.assets = tokens.sort((a, b) => {
+            return ethers_1.BigNumber.from(a).sub(b).toNumber();
+        });
         this.acceptableSlippage = (1 - slippage) * 1000;
     }
     async getPoolTokens() {
