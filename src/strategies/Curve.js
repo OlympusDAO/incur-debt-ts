@@ -54,14 +54,14 @@ class Curve {
                 .div(reservesB)
                 .toString();
         if (isTokenAMorePrecise) {
-            const decimalAdjustment = ethers_1.BigNumber.from(tokenADecimals).div(tokenBDecimals);
+            const decimalAdjustment = ethers_1.BigNumber.from("10").pow(ethers_1.BigNumber.from(tokenADecimals).sub(tokenBDecimals));
             const adjustedReservesB = decimalAdjustment.mul(reservesB);
             return ethers_1.BigNumber.from(reservesA)
                 .mul("1000")
                 .div(adjustedReservesB)
                 .toString();
         }
-        const decimalAdjustment = ethers_1.BigNumber.from(tokenBDecimals).div(tokenADecimals);
+        const decimalAdjustment = ethers_1.BigNumber.from("10").pow(ethers_1.BigNumber.from(tokenBDecimals).sub(tokenADecimals));
         const adjustedReservesA = decimalAdjustment.mul(reservesA);
         return adjustedReservesA.mul("1000").div(reservesB).toString();
     }
@@ -77,22 +77,62 @@ class Curve {
         const tokenB = await this.getTokenB();
         let tokenBAmount;
         let otherToken;
+        let ohmDecimals;
+        let otherDecimals;
         const reserveRatio = await this.getReserveRatio();
         if (tokenA.toLowerCase() == this.ohmAddress.toLowerCase()) {
             tokenAAmount = this.ohmToBorrow;
-            tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
-                .mul("1000")
-                .div(reserveRatio)
-                .toString();
+            ohmDecimals = await this.getTokenADecimals();
             otherToken = tokenB;
+            otherDecimals = await this.getTokenBDecimals();
+            const decimalDiff = ethers_1.BigNumber.from(otherDecimals).sub(ohmDecimals);
+            if (decimalDiff.gt("0")) {
+                tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .mul(ethers_1.BigNumber.from("10").pow(decimalDiff))
+                    .div(reserveRatio)
+                    .toString();
+            }
+            else if (decimalDiff.lt("0")) {
+                tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .div(reserveRatio)
+                    .div(ethers_1.BigNumber.from("10").pow(decimalDiff.abs()))
+                    .toString();
+            }
+            else {
+                tokenBAmount = ethers_1.BigNumber.from(tokenAAmount)
+                    .mul("1000")
+                    .div(reserveRatio)
+                    .toString();
+            }
         }
         else {
             tokenBAmount = this.ohmToBorrow;
-            tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
-                .mul(reserveRatio)
-                .div("1000")
-                .toString();
-            otherToken = tokenA;
+            ohmDecimals = await this.getTokenBDecimals();
+            otherToken = tokenB;
+            otherDecimals = await this.getTokenADecimals();
+            const decimalDiff = ethers_1.BigNumber.from(otherDecimals).sub(ohmDecimals);
+            if (decimalDiff.gt("0")) {
+                tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .mul(ethers_1.BigNumber.from("10").pow(decimalDiff))
+                    .div("1000")
+                    .toString();
+            }
+            else if (decimalDiff.lt("0")) {
+                tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .div(ethers_1.BigNumber.from("10").pow(decimalDiff.abs()))
+                    .div("1000")
+                    .toString();
+            }
+            else {
+                tokenAAmount = ethers_1.BigNumber.from(tokenBAmount)
+                    .mul(reserveRatio)
+                    .div("1000")
+                    .toString();
+            }
         }
         const expectedLPTokenAmount = await this.getLPTokenAmount([tokenAAmount, tokenBAmount], true);
         const minLPTokenAmount = ethers_1.BigNumber.from(expectedLPTokenAmount)
