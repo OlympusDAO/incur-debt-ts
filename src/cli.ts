@@ -68,6 +68,44 @@ async function repayDebt(
     );
 }
 
+async function borrowable(
+    account: string,
+    rpcUrl: string,
+    chainId: number
+): Promise<void> {
+    console.log(
+        await new IncurDebt(new Context(chainId, rpcUrl)).getBorrowable(account)
+    );
+}
+
+async function lpBalance(
+    account: string,
+    lpAddress: string,
+    rpcUrl: string,
+    chainId: number
+): Promise<void> {
+    console.log(
+        await new IncurDebt(new Context(chainId, rpcUrl)).getBalanceOfLpToken(
+            account,
+            lpAddress
+        )
+    );
+}
+
+async function debtLimit(rpcUrl: string, chainId: number): Promise<void> {
+    console.log(
+        await new IncurDebt(new Context(chainId, rpcUrl)).getGlobalDebtLimit()
+    );
+}
+
+async function outstandingDebt(rpcUrl: string, chainId: number): Promise<void> {
+    console.log(
+        await new IncurDebt(
+            new Context(chainId, rpcUrl)
+        ).getTotalOutstandingDebt()
+    );
+}
+
 async function addLiq(path: string, absolutePath: boolean): Promise<void> {
     const jsonArgs = JSON.parse(
         await readFile(absolutePath ? path : process.cwd() + "/" + path, "utf8")
@@ -205,6 +243,56 @@ async function cli(): Promise<void> {
             )
             .action(async (address, options) => {
                 await borrowerData(address, options.rpcUrl, options.chainId);
+            })
+    );
+
+    functions.push(
+        program
+            .command("borrowable")
+            .description("Get amount of OHM borrowable by account.")
+            .argument(
+                "<address>",
+                "The address of the account to get amount of borrowable OHM for."
+            )
+            .action(async (address, options) => {
+                await borrowable(address, options.rpcUrl, options.chainId);
+            })
+    );
+
+    functions.push(
+        program
+            .command("lp-balance")
+            .description("Get account's lp balance by lp address.")
+            .argument(
+                "<accountAddress>",
+                "The address of the account to get lp balance for."
+            )
+            .argument("<lpAddress>", "The lp address to get balance for.")
+            .action(async (accountAddress, lpAddress, options) => {
+                await lpBalance(
+                    accountAddress,
+                    lpAddress,
+                    options.rpcUrl,
+                    options.chainId
+                );
+            })
+    );
+
+    functions.push(
+        program
+            .command("debt-limit")
+            .description("Get the total debt limit of the system.")
+            .action(async (options) => {
+                await debtLimit(options.rpcUrl, options.chainId);
+            })
+    );
+
+    functions.push(
+        program
+            .command("outstanding-debt")
+            .description("Get the total outstanding debt of the system.")
+            .action(async (options) => {
+                await outstandingDebt(options.rpcUrl, options.chainId);
             })
     );
 

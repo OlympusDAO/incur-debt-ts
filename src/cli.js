@@ -25,6 +25,18 @@ async function withdraw(amount, rpcUrl, chainId) {
 async function repayDebt(gohmAmount, withCollateral, withdrawRest, rpcUrl, chainId) {
     console.log(await new incurDebt_1.IncurDebt(new context_1.Context(chainId, rpcUrl)).getRepayDebtTx(gohmAmount, withCollateral, withdrawRest));
 }
+async function borrowable(account, rpcUrl, chainId) {
+    console.log(await new incurDebt_1.IncurDebt(new context_1.Context(chainId, rpcUrl)).getBorrowable(account));
+}
+async function lpBalance(account, lpAddress, rpcUrl, chainId) {
+    console.log(await new incurDebt_1.IncurDebt(new context_1.Context(chainId, rpcUrl)).getBalanceOfLpToken(account, lpAddress));
+}
+async function debtLimit(rpcUrl, chainId) {
+    console.log(await new incurDebt_1.IncurDebt(new context_1.Context(chainId, rpcUrl)).getGlobalDebtLimit());
+}
+async function outstandingDebt(rpcUrl, chainId) {
+    console.log(await new incurDebt_1.IncurDebt(new context_1.Context(chainId, rpcUrl)).getTotalOutstandingDebt());
+}
 async function addLiq(path, absolutePath) {
     const jsonArgs = JSON.parse(await (0, promises_1.readFile)(absolutePath ? path : process.cwd() + "/" + path, "utf8"));
     console.log(await new incurDebt_1.IncurDebt(new context_1.Context(jsonArgs.chainId, jsonArgs.rpcUrl)).getAddLiquidityTx(jsonArgs.sender, jsonArgs.strategy, jsonArgs.lpAddress, jsonArgs.slippage, jsonArgs.ohmAmount, jsonArgs.otherTokens, jsonArgs.otherTokenAmounts));
@@ -91,6 +103,33 @@ async function cli() {
         .argument("<address>", "The address of the borrower to get data for.")
         .action(async (address, options) => {
         await borrowerData(address, options.rpcUrl, options.chainId);
+    }));
+    functions.push(program
+        .command("borrowable")
+        .description("Get amount of OHM borrowable by account.")
+        .argument("<address>", "The address of the account to get amount of borrowable OHM for.")
+        .action(async (address, options) => {
+        await borrowable(address, options.rpcUrl, options.chainId);
+    }));
+    functions.push(program
+        .command("lp-balance")
+        .description("Get account's lp balance by lp address.")
+        .argument("<accountAddress>", "The address of the account to get lp balance for.")
+        .argument("<lpAddress>", "The lp address to get balance for.")
+        .action(async (accountAddress, lpAddress, options) => {
+        await lpBalance(accountAddress, lpAddress, options.rpcUrl, options.chainId);
+    }));
+    functions.push(program
+        .command("debt-limit")
+        .description("Get the total debt limit of the system.")
+        .action(async (options) => {
+        await debtLimit(options.rpcUrl, options.chainId);
+    }));
+    functions.push(program
+        .command("outstanding-debt")
+        .description("Get the total outstanding debt of the system.")
+        .action(async (options) => {
+        await outstandingDebt(options.rpcUrl, options.chainId);
     }));
     for (const fn of functions) {
         fn.requiredOption("-cid, --chain-id <num>", "The chain id.").requiredOption("-ru, --rpc-url <str>", "The RPC url.");

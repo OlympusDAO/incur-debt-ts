@@ -135,27 +135,37 @@ export class IncurDebt {
     async getBorrowerData(borrower: string): Promise<BorrowerData> {
         const result: Array<any> = await this.contract.borrowers(borrower);
         return {
-            debt: result[0],
-            limit: result[1],
-            collateralInGOHM: result[2],
-            unwrappedGOHM: result[3],
+            debt: result[0].toString(),
+            limit: result[1].toString(),
+            collateralInGOHM: result[2].toString(),
+            unwrappedGOHM: result[3].toString(),
             isNonLpBorrower: result[4],
             isLpBorrower: result[5],
         };
     }
 
-    async balanceOfLpToken(
+    async getBalanceOfLpToken(
         accountAddress: string,
         lpAddress: string
-    ): Promise<number> {
-        return await this.contract.lpTokenOwnership(lpAddress, accountAddress);
+    ): Promise<string> {
+        return (
+            await this.contract.lpTokenOwnership(lpAddress, accountAddress)
+        ).toString();
     }
 
-    async getBorrowable(): Promise<number> {
-        return await this.contract.getAvailableToBorrow();
+    async getBorrowable(accountAddress: string): Promise<string> {
+        return (
+            await this.contract.callStatic.getAvailableToBorrow({
+                from: accountAddress,
+            })
+        ).toString();
     }
 
-    async getTotalOutstandingDebt(): Promise<number> {
-        return await this.contract.totalOutstandingGlobalDebt();
+    async getGlobalDebtLimit(): Promise<string> {
+        return (await this.contract.globalDebtLimit()).toString();
+    }
+
+    async getTotalOutstandingDebt(): Promise<string> {
+        return (await this.contract.totalOutstandingGlobalDebt()).toString();
     }
 }
