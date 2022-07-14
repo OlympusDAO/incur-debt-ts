@@ -13,6 +13,12 @@ class IncurDebt {
         this._strategies = (0, addresses_1.StrategyAddresses)(context.chainId);
         this.contract = new ethers_1.Contract((0, addresses_1.IncurDebtAddress)(context.chainId), IncurDebt.abi, context.provider);
     }
+    async getDepositTx(gohmAmount) {
+        return await this.contract.populateTransaction.deposit(ethers_1.BigNumber.from(gohmAmount));
+    }
+    async getBorrowTx(ohmAmount) {
+        return await this.contract.populateTransaction.borrow(ethers_1.BigNumber.from(ohmAmount));
+    }
     async getAddLiquidityTx(sender, strategy, lpAddress, slippage = 0.01, ohmAmount, otherTokens = [], otherTokenAmounts = []) {
         const provider = this._context.provider;
         const strategies = this._strategies;
@@ -30,6 +36,21 @@ class IncurDebt {
         const encodedParams = await strategyInstance.getAddLiquidityCalldata();
         tx = await this.contract.populateTransaction.createLP(ohmAmount, strategies[strategy], encodedParams);
         return tx;
+    }
+    async getWithdrawLiquidityTx(liquidity, lpToken) {
+        return await this.contract.populateTransaction.withdrawLP(ethers_1.BigNumber.from(liquidity), lpToken);
+    }
+    async getWithdrawTx(gohmAmount) {
+        return await this.contract.populateTransaction.withdraw(ethers_1.BigNumber.from(gohmAmount));
+    }
+    async getRepayDebtTx(gohmAmount, withCollateral, withdrawRest) {
+        const populator = this.contract.populateTransaction;
+        if (withCollateral)
+            if (withdrawRest)
+                return await populator.repayDebtWithCollateralAndWithdrawTheRest();
+            else
+                return await populator.repayDebtWithCollateral();
+        return await populator.repayDebtWithOHM(ethers_1.BigNumber.from(gohmAmount));
     }
     async getBorrowerData(borrower) {
         const result = await this.contract.borrowers(borrower);

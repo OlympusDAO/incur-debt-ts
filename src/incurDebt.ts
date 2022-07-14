@@ -1,5 +1,5 @@
 import { BorrowerData, StrategyInterface } from "./types";
-import { Contract, providers, UnsignedTransaction } from "ethers";
+import { BigNumber, Contract, providers, UnsignedTransaction } from "ethers";
 import { IncurDebtABI } from "./metadata/abis";
 import { IncurDebtAddress, StrategyAddresses } from "./metadata/addresses";
 import { Context } from "./context";
@@ -25,6 +25,18 @@ export class IncurDebt {
             IncurDebtAddress(context.chainId)!,
             IncurDebt.abi,
             context.provider
+        );
+    }
+
+    async getDepositTx(gohmAmount: string): Promise<UnsignedTransaction> {
+        return await this.contract.populateTransaction.deposit(
+            BigNumber.from(gohmAmount)
+        );
+    }
+
+    async getBorrowTx(ohmAmount: string): Promise<UnsignedTransaction> {
+        return await this.contract.populateTransaction.borrow(
+            BigNumber.from(ohmAmount)
         );
     }
 
@@ -88,6 +100,36 @@ export class IncurDebt {
         );
 
         return tx;
+    }
+
+    async getWithdrawLiquidityTx(
+        liquidity: string,
+        lpToken: string
+    ): Promise<UnsignedTransaction> {
+        return await this.contract.populateTransaction.withdrawLP(
+            BigNumber.from(liquidity),
+            lpToken
+        );
+    }
+
+    async getWithdrawTx(gohmAmount: string): Promise<UnsignedTransaction> {
+        return await this.contract.populateTransaction.withdraw(
+            BigNumber.from(gohmAmount)
+        );
+    }
+
+    async getRepayDebtTx(
+        gohmAmount: string,
+        withCollateral: boolean,
+        withdrawRest: boolean
+    ): Promise<UnsignedTransaction> {
+        const populator = this.contract.populateTransaction;
+        if (withCollateral)
+            if (withdrawRest)
+                return await populator.repayDebtWithCollateralAndWithdrawTheRest();
+            else return await populator.repayDebtWithCollateral();
+
+        return await populator.repayDebtWithOHM(BigNumber.from(gohmAmount));
     }
 
     async getBorrowerData(borrower: string): Promise<BorrowerData> {

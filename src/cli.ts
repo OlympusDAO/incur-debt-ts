@@ -2,11 +2,71 @@
 
 import { Command } from "commander";
 import { readFile } from "fs/promises";
+import { isOptionalChain } from "typescript";
 import pkgInfo from "../package.json";
 import { Context } from "./context";
 import { IncurDebt } from "./incurDebt";
 
 const program = new Command();
+
+async function deposit(
+    amount: string,
+    rpcUrl: string,
+    chainId: number
+): Promise<void> {
+    console.log(
+        await new IncurDebt(new Context(chainId, rpcUrl)).getDepositTx(amount)
+    );
+}
+
+async function borrow(
+    amount: string,
+    rpcUrl: string,
+    chainId: number
+): Promise<void> {
+    console.log(
+        await new IncurDebt(new Context(chainId, rpcUrl)).getBorrowTx(amount)
+    );
+}
+
+async function withdrawLiq(
+    liquidity: string,
+    lpAddress: string,
+    rpcUrl: string,
+    chainId: number
+): Promise<void> {
+    console.log(
+        await new IncurDebt(
+            new Context(chainId, rpcUrl)
+        ).getWithdrawLiquidityTx(liquidity, lpAddress)
+    );
+}
+
+async function withdraw(
+    amount: string,
+    rpcUrl: string,
+    chainId: number
+): Promise<void> {
+    console.log(
+        await new IncurDebt(new Context(chainId, rpcUrl)).getWithdrawTx(amount)
+    );
+}
+
+async function repayDebt(
+    gohmAmount: string,
+    withCollateral: boolean,
+    withdrawRest: boolean,
+    rpcUrl: string,
+    chainId: number
+): Promise<void> {
+    console.log(
+        await new IncurDebt(new Context(chainId, rpcUrl)).getRepayDebtTx(
+            gohmAmount,
+            withCollateral,
+            withdrawRest
+        )
+    );
+}
 
 async function addLiq(path: string, absolutePath: boolean): Promise<void> {
     const jsonArgs = JSON.parse(
@@ -46,6 +106,28 @@ async function cli(): Promise<void> {
         .description("CLI to library for Olympus Incur Debt partners.")
         .version(pkgInfo.version);
 
+    let functions: Command[] = [];
+
+    functions.push(
+        program
+            .command("deposit")
+            .description("Get unsigned tx data for depositing gOHM.")
+            .argument("<gohmAmount>", "The amount of gOHM to deposit.")
+            .action(async (gohmAmount, options) => {
+                await deposit(gohmAmount, options.rpcUrl, options.chainId);
+            })
+    );
+
+    functions.push(
+        program
+            .command("borrow")
+            .description("Get unsigned tx data for borrowing OHM.")
+            .argument("<ohmAmount>", "The amount of OHM to borrow.")
+            .action(async (ohmAmount, options) => {
+                await borrow(ohmAmount, options.rpcUrl, options.chainId);
+            })
+    );
+
     program
         .command("add-liq")
         .description(
@@ -60,15 +142,78 @@ async function cli(): Promise<void> {
             await addLiq(path, options.absolutePath ? true : false);
         });
 
-    program
-        .command("borrower-data")
-        .description("Get borrower data.")
-        .argument("<address>", "The address of the borrower to get data for.")
-        .requiredOption("-cid, --chain-id <num>", "The chain id.")
-        .requiredOption("-ru, --rpc-url <str>", "The RPC url.")
-        .action(async (address, options) => {
-            await borrowerData(address, options.rpcUrl, options.chainId);
-        });
+    functions.push(
+        program
+            .command("withdraw-liq")
+            .description("Get unsigned tx data for withdrawing liquidity.")
+            .argument("<liquidity>", "The amount of liquidity to withdraw.")
+            .argument("<lpTokenAddress>", "The address of the lp token.")
+            .action(async (liquidity, lpTokenAddress, options) => {
+                await withdrawLiq(
+                    liquidity,
+                    lpTokenAddress,
+                    options.rpcUrl,
+                    options.chainId
+                );
+            })
+    );
+
+    functions.push(
+        program
+            .command("withdraw")
+            .description("Get unsigned tx data for withdrawing gOHM.")
+            .argument("<gohmAmount>", "The amount of gOHM to withdraw.")
+            .action(async (gohmAmount, options) => {
+                await withdraw(gohmAmount, options.rpcUrl, options.chainId);
+            })
+    );
+
+    functions.push(
+        program
+            .command("repay-debt")
+            .description(
+                "Get unsigned tx data for repaying debt either by transferring gOHM or using existing collateral."
+            )
+            .argument("<gohmAmount>", "The amount of gOHM repay debt with.")
+            .option(
+                "-wc, --with-collateral",
+                "Whether to repay with collateral."
+            )
+            .option(
+                "-wr, --withdraw-rest",
+                "Whether to withdraw rest of collateral after repaying."
+            )
+            .action(async (gohmAmount, options) => {
+                const wc: boolean = options.withCollateral != undefined;
+                await repayDebt(
+                    gohmAmount,
+                    wc,
+                    wc ? options.withdrawRest != undefined : false,
+                    options.rpcUrl,
+                    options.chainId
+                );
+            })
+    );
+
+    functions.push(
+        program
+            .command("borrower-data")
+            .description("Get borrower data.")
+            .argument(
+                "<address>",
+                "The address of the borrower to get data for."
+            )
+            .action(async (address, options) => {
+                await borrowerData(address, options.rpcUrl, options.chainId);
+            })
+    );
+
+    for (const fn of functions) {
+        fn.requiredOption(
+            "-cid, --chain-id <num>",
+            "The chain id."
+        ).requiredOption("-ru, --rpc-url <str>", "The RPC url.");
+    }
 
     if (process.argv.length < 3) process.argv[2] = "-h";
 
