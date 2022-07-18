@@ -37,7 +37,7 @@ exports.BalancerHelpersABI = [
     `function queryJoin(bytes32, address, address, ${exports.JoinPoolRequest}) returns (uint256, uint256[])`,
 ];
 exports.BalancerVaultABI = [
-    "function getPoolTokens(bytes32) view returns (IERC20[], uint256[], uint256)",
+    "function getPoolTokens(bytes32) external view returns (address[] memory, uint256[] memory, uint256)",
 ];
 exports.ERC20ABI = [
     "function approve(address, uint256) returns (bool)",

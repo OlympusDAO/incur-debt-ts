@@ -1,0 +1,11 @@
+{
+  "chainId": 1,
+  "rpcUrl": "https://mainnet.infura.io/v3/00000000000000000000000000000000",
+  "sender": "0xA52Fd396891E7A74b641a2Cb1A6999Fcf56B077e",
+  "strategy": "balancer",
+  "lpAddress": "0xc45d42f801105e861e86658648e3678ad7aa70f900010000000000000000011e",
+  "slippage": 0.01,
+  "ohmAmount": "100000000000000",
+  "otherTokens": ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", "0x6B175474E89094C44Da98b954EedeAC495271d0F"],
+  "otherTokenAmounts": ["560186000000000000000", "826982568000000000000000"]
+}
