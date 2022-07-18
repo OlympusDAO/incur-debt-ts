@@ -40,7 +40,7 @@ export const BalancerHelpersABI = [
 ];
 
 export const BalancerVaultABI = [
-    "function getPoolTokens(bytes32) view returns (IERC20[], uint256[], uint256)",
+    "function getPoolTokens(bytes32) external view returns (address[] memory, uint256[] memory, uint256)",
 ];
 
 export const ERC20ABI = [

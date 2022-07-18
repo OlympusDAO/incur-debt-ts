@@ -4,9 +4,9 @@ Utility library to build calldata for Olympus Incur Debt partners.
 
 ### Installation
 
-`npm install incur-debt-ts`
+`npm install @olympusdao/incur-debt-ts`
 or
-`yarn install incur-debt-ts`
+`yarn install @olympusdao/incur-debt-ts`
 
 ### Use
 
@@ -24,6 +24,7 @@ Create a JSON file with the following information:
 - If you are using Balancer as your DEX, an array of the amounts of the previously specified other tokens you wish to deposit to the pool
 
 Template:
+
 ```js
 {
     "chainId": 0,
