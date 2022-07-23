@@ -4,11 +4,13 @@ Utility library to build calldata for Olympus Incur Debt partners.
 
 ### Installation
 
-`npm install @olympusdao/incur-debt-ts`
+`npm install @olympusdao/incur-debt`
 or
-`yarn install @olympusdao/incur-debt-ts`
+`yarn install @olympusdao/incur-debt`
 
 ### Use
+
+A pool must have been created on the desired DEX before using this CLI.
 
 Create a JSON file with the following information:
 
@@ -45,4 +47,4 @@ To build the calldata for adding liquidity, start a command line or terminal ins
 
 ### Current Status
 
-Currently building transactions to add liquidity to Uniswap V2 and Sushiswap pools is supported and has been tested. The Incur Debt Curve and Balancer strategies have rudimentary implementations but Balancer requires you to enter the otherTokens and otherTokenAmounts in the order they appear in the Balancer Pool contract. Automated sorting will be coming in a future version, as will commands to build calldata for removing liquidity.
+Currently building transactions to add liquidity to Uniswap V2, Sushiswap, and Balancer pools is supported and has been tested. The Incur Debt Curve strategy has only a rudimentary implementation.

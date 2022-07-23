@@ -1,5 +1,5 @@
 export const IncurDebtAddress = (chainId: number) => {
-    if (chainId == 1) return "0x544f54c5F38D6D6b96331f7E75CB202B5ea72eca";
+    if (chainId == 1) return "0xd9d87586774Fb9d036fa95A5991474513Ff6C96E";
     if (chainId == 5) return "0x5Fd05A2f73C3cC77a1d2CdEEae4C0B0149E30b94";
 };
 
