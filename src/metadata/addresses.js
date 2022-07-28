@@ -18,10 +18,10 @@ exports.OhmAddress = OhmAddress;
 const StrategyAddresses = (chainId) => {
     if (chainId == 1)
         return {
-            curve: "0xFc495557A638B2322443FAf76F5e860085C36D38",
-            uniswap: "0xc50A61C0A24d60c9d2Ac7bBB4682F685537260ac",
-            sushiswap: "0x0392e97abC5986cc3fdb083e6B90AA941ec4D1b3",
-            balancer: "0x0392e97abC5986cc3fdb083e6B90AA941ec4D1b3",
+            curve: "0x4B152CCB613Ee248df9bb98195bC505665D6C4b2",
+            uniswap: "0x39D1984051759830F0C0Ae979b4aEd776CF481E0",
+            sushiswap: "0x0692bDcAa767Dc62C420B7893a1045E657771324",
+            balancer: "0x48BdC486C9DF31848C62FDc85c5c77d4Be013cDC",
         };
     if (chainId == 5)
         return {

@@ -129,7 +129,7 @@ export class Balancer implements StrategyInterface {
             .div("1000");
 
         const encodedParams = abiCoder.encode(
-            ["bytes", "address[]", "uint256[]", "uint256"],
+            ["bytes32", "address[]", "uint256[]", "uint256"],
             [this.pool, this.assets, this.assetAmounts, minPoolTokensOut]
         );
 
