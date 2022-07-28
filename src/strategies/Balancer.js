@@ -63,7 +63,7 @@ class Balancer {
         const minPoolTokensOut = expectedPoolTokensOut[0]
             .mul(this.acceptableSlippage)
             .div("1000");
-        const encodedParams = utils_1.defaultAbiCoder.encode(["bytes", "address[]", "uint256[]", "uint256"], [this.pool, this.assets, this.assetAmounts, minPoolTokensOut]);
+        const encodedParams = utils_1.defaultAbiCoder.encode(["bytes32", "address[]", "uint256[]", "uint256"], [this.pool, this.assets, this.assetAmounts, minPoolTokensOut]);
         return encodedParams;
     }
 }
